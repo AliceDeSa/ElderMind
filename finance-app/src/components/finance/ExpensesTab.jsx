@@ -8,7 +8,15 @@ import { Plus, Trash2, CreditCard, Edit2, GripVertical, ChevronDown, ChevronUp, 
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
 export default function ExpensesTab() {
-    const { budgetAllocation, cards, setCards, refreshData, addCard } = useFinance(); // Use global state
+    const {
+        budgetAllocation,
+        cards,
+        setCards,
+        addCard,
+        addExpense,
+        updateExpense,
+        deleteExpense
+    } = useFinance(); // Use global state
     const [currentDate, setCurrentDate] = useState(new Date()); // Date state
     const [expandedCards, setExpandedCards] = useState([]); // CLOSED BY DEFAULT
     const [showAddCard, setShowAddCard] = useState(false);
@@ -87,7 +95,6 @@ export default function ExpensesTab() {
         const { cardId, editMode, expenseId } = expenseModal;
 
         const expenseData = {
-            card_id: cardId,
             description: formData.description,
             amount: parseFloat(formData.amount),
             category: formData.category,
@@ -104,28 +111,25 @@ export default function ExpensesTab() {
 
         let res;
         if (editMode) {
-            res = await supabase.from('expenses').update(expenseData).eq('id', expenseId);
+            res = await updateExpense(expenseId, expenseData);
         } else {
-            res = await supabase.from('expenses').insert([expenseData]);
+            res = await addExpense(cardId, expenseData);
         }
 
         if (res.error) {
             console.error('Error saving expense:', res.error);
             alert("Erro ao salvar despesa. Verifique o console para mais detalhes.");
         } else {
-            refreshData();
             setExpenseModal({ open: false, cardId: null, editMode: false, expenseId: null });
         }
     };
 
-    const deleteExpense = async (cardId, expenseId) => {
+    const handleDeleteExpense = async (cardId, expenseId) => {
         if (confirm("Excluir despesa?")) {
-            const { error } = await supabase.from('expenses').delete().eq('id', expenseId);
-            if (error) {
-                console.error('Error deleting expense:', error);
+            const res = await deleteExpense(expenseId);
+            if (res.error) {
+                console.error('Error deleting expense:', res.error);
                 alert("Erro ao excluir despesa.");
-            } else {
-                refreshData();
             }
         }
     }
@@ -249,7 +253,7 @@ export default function ExpensesTab() {
                                                                         <span className="font-bold text-white">R$ {expense.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                                                                         <div className="flex items-center gap-1 border-l border-border/30 pl-3">
                                                                             <button onClick={() => openEditExpense(card.id, expense)} className="p-1 text-textSecondary hover:text-blue-400 rounded"><Edit2 size={14} /></button>
-                                                                            <button onClick={() => deleteExpense(card.id, expense.id)} className="p-1 text-textSecondary hover:text-red-500 rounded"><Trash2 size={14} /></button>
+                                                                            <button onClick={() => handleDeleteExpense(card.id, expense.id)} className="p-1 text-textSecondary hover:text-red-500 rounded"><Trash2 size={14} /></button>
                                                                         </div>
                                                                     </div>
                                                                 </div>

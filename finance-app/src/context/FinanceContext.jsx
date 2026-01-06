@@ -15,22 +15,26 @@ export const FinanceProvider = ({ children }) => {
     const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
+    const { user } = useAuth();
+    const userId = user?.id;
+
     // --- FETCH DATA ---
     const fetchData = useCallback(async () => {
+        if (!userId) return;
         setLoading(true);
         try {
             // 1. Fetch Incomes
-            const { data: incomeData } = await supabase.from('incomes').select('*');
+            const { data: incomeData } = await supabase.from('incomes').select('*').eq('user_id', userId);
             setIncomes((incomeData || []).map(i => ({
                 ...i,
                 amount: Number(i.amount)
             })));
 
             // 2. Fetch Cards
-            const { data: cardData } = await supabase.from('cards').select('*');
+            const { data: cardData } = await supabase.from('cards').select('*').eq('user_id', userId);
 
             // 3. Fetch Expenses for all cards
-            const { data: expenseData } = await supabase.from('expenses').select('*');
+            const { data: expenseData } = await supabase.from('expenses').select('*').eq('user_id', userId);
 
             // Merge expenses into cards
             const cardsWithExpenses = (cardData || []).map(card => {
@@ -39,23 +43,37 @@ export const FinanceProvider = ({ children }) => {
                     .map(e => ({
                         ...e,
                         amount: Number(e.amount),
-                        budgetId: e.budget_id // Map DB snack_case to UI camelCase
+                        budgetId: e.budget_id
                     }));
 
                 return {
                     ...card,
-                    limit: Number(card.limit_val), // Map limit_val to limit for UI
+                    limit: Number(card.limit_val),
                     expenses: cardExpenses
                 };
             });
             setCards(cardsWithExpenses);
 
             // 4. Fetch Budget Allocation
-            const { data: budgetData } = await supabase.from('budget_allocation').select('*').order('value', { ascending: false });
-            setBudgetAllocation(budgetData || []);
+            let { data: budgetData } = await supabase.from('budget_allocation').select('*').eq('user_id', userId).order('value', { ascending: false });
+
+            // Initialize defaults if empty for this user
+            if (!budgetData || budgetData.length === 0) {
+                const defaults = [
+                    { id: 'fixed', name: 'Custos Fixos', value: 30, color: '#3b82f6', user_id: userId },
+                    { id: 'freedom', name: 'Liberdade Financeira', value: 25, color: '#818cf8', user_id: userId },
+                    { id: 'comfort', name: 'Conforto', value: 15, color: '#f472b6', user_id: userId },
+                    { id: 'goals', name: 'Metas', value: 15, color: '#7c3aed', user_id: userId },
+                    { id: 'pleasure', name: 'Prazeres', value: 10, color: '#f97316', user_id: userId },
+                    { id: 'knowledge', name: 'Conhecimento', value: 5, color: '#fbbf24', user_id: userId }
+                ];
+                const { data: insertedData } = await supabase.from('budget_allocation').insert(defaults).select();
+                budgetData = insertedData || [];
+            }
+            setBudgetAllocation(budgetData);
 
             // 5. Fetch Financial Goals
-            const { data: goalsData } = await supabase.from('financial_goals').select('*').order('created_at', { ascending: true });
+            const { data: goalsData } = await supabase.from('financial_goals').select('*').eq('user_id', userId).order('created_at', { ascending: true });
             setFinancialGoals(goalsData || []);
 
         } catch (error) {
@@ -63,11 +81,11 @@ export const FinanceProvider = ({ children }) => {
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [userId]);
 
     useEffect(() => {
-        fetchData();
-    }, [fetchData]);
+        if (userId) fetchData();
+    }, [fetchData, userId]);
 
     // Derived flat expenses list
     const expenses = cards.flatMap(c => c.expenses);
@@ -75,6 +93,7 @@ export const FinanceProvider = ({ children }) => {
     // --- ACTIONS ---
     const addIncome = async (income) => {
         const payload = {
+            user_id: userId,
             name: income.name || income.description || 'Nova Renda',
             amount: isNaN(Number(income.amount)) ? 0 : Number(income.amount),
             recurring: income.recurring !== undefined ? income.recurring : false,
@@ -98,7 +117,7 @@ export const FinanceProvider = ({ children }) => {
             month: income.month !== undefined ? income.month : selectedMonth
         };
 
-        const { error } = await supabase.from('incomes').update(payload).eq('id', id);
+        const { error } = await supabase.from('incomes').update(payload).eq('id', id).eq('user_id', userId);
 
         if (!error) {
             fetchData();
@@ -108,7 +127,7 @@ export const FinanceProvider = ({ children }) => {
     };
 
     const deleteIncome = async (id) => {
-        const { error } = await supabase.from('incomes').delete().eq('id', id);
+        const { error } = await supabase.from('incomes').delete().eq('id', id).eq('user_id', userId);
         if (!error) {
             setIncomes(prev => prev.filter(i => i.id !== id));
         } else {
@@ -118,6 +137,7 @@ export const FinanceProvider = ({ children }) => {
 
     const addCard = async (card) => {
         const payload = {
+            user_id: userId,
             name: card.name,
             limit_val: Number(card.limit),
             due_date: card.dueDate
@@ -138,6 +158,7 @@ export const FinanceProvider = ({ children }) => {
     // --- FINANCIAL GOALS ACTIONS ---
     const addGoal = async (goal) => {
         const { data, error } = await supabase.from('financial_goals').insert([{
+            user_id: userId,
             title: goal.title,
             target_amount: Number(goal.targetAmount),
             current_amount: 0,
@@ -161,7 +182,7 @@ export const FinanceProvider = ({ children }) => {
             deadline: goal.deadline,
             category: goal.category,
             icon: goal.icon
-        }).eq('id', id);
+        }).eq('id', id).eq('user_id', userId);
 
         if (!error) {
             fetchData();
@@ -171,7 +192,7 @@ export const FinanceProvider = ({ children }) => {
     };
 
     const deleteGoal = async (id) => {
-        const { error } = await supabase.from('financial_goals').delete().eq('id', id);
+        const { error } = await supabase.from('financial_goals').delete().eq('id', id).eq('user_id', userId);
         if (!error) {
             setFinancialGoals(prev => prev.filter(g => g.id !== id));
         } else {
@@ -184,8 +205,48 @@ export const FinanceProvider = ({ children }) => {
         for (const item of newAllocation) {
             await supabase.from('budget_allocation')
                 .update({ value: item.value })
-                .eq('id', item.id);
+                .eq('id', item.id)
+                .eq('user_id', userId);
         }
+    };
+
+    const addExpense = async (cardId, expense) => {
+        const payload = {
+            ...expense,
+            user_id: userId,
+            card_id: cardId,
+            amount: Number(expense.amount)
+        };
+        const { error } = await supabase.from('expenses').insert([payload]);
+        if (!error) {
+            fetchData();
+            return { success: true };
+        }
+        return { success: false, error };
+    };
+
+    const updateExpense = async (expenseId, expense) => {
+        const { error } = await supabase.from('expenses')
+            .update(expense)
+            .eq('id', expenseId)
+            .eq('user_id', userId);
+        if (!error) {
+            fetchData();
+            return { success: true };
+        }
+        return { success: false, error };
+    };
+
+    const deleteExpense = async (expenseId) => {
+        const { error } = await supabase.from('expenses')
+            .delete()
+            .eq('id', expenseId)
+            .eq('user_id', userId);
+        if (!error) {
+            fetchData();
+            return { success: true };
+        }
+        return { success: false, error };
     };
 
     const updateCardsState = async (newCards) => {
@@ -283,6 +344,9 @@ export const FinanceProvider = ({ children }) => {
             addGoal,
             updateGoal,
             deleteGoal,
+            addExpense,
+            updateExpense,
+            deleteExpense,
             getSummary,
             getYearlyStats,
             budgetAllocation,
