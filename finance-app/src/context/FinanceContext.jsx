@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import { useAuth } from './AuthContext';
 
 const FinanceContext = createContext();
 
