@@ -28,17 +28,19 @@ function Router() {
 
   // If user is logged in
   if (user) {
+    // Check if current route is a known tab, otherwise default to dashboard
+    const knownHashes = ['#finances', '#goals', '#objectives', '#education', '#calculator'];
+    const showDashboard = !route || route === '' || route === '#dashboard' || !knownHashes.includes(route.split('=')[0]);
+
     return (
       <FinanceProvider>
         <DashboardLayout>
-          {/* Route content inside layout */}
-          {(!route || route === '' || route === '#dashboard') && <Dashboard />}
+          {showDashboard && <Dashboard />}
           {route === '#finances' && <IncomesExpenses />}
           {route === '#goals' && <Goals />}
           {route === '#objectives' && <ObjectivesPage />}
           {route === '#education' && <Education />}
           {route === '#calculator' && <Calculator />}
-          {/* Add other routes here */}
         </DashboardLayout>
       </FinanceProvider>
     );
