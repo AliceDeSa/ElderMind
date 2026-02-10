@@ -1,0 +1,106 @@
+{
+    "title": "Financial Education",
+    "tabs": {
+        "lessons": "Lessons",
+        "quizzes": "Quizzes"
+    },
+    "stats": {
+        "lessonsCompleted": "Lessons Completed",
+        "quizzesCompleted": "Quizzes Completed",
+        "averageScore": "Average Score",
+        "overallProgress": "Overall Progress",
+        "activitiesCompleted": "Activities completed",
+        "timeInvested": "Time invested",
+        "currentStreak": "Current streak",
+        "days": "days"
+    },
+    "overview": {
+        "welcome": "Welcome to the Education Hub! 👋",
+        "subtitle": "Continue your investment learning journey",
+        "continueLearning": "Continue Learning",
+        "treeCard": {
+            "title": "Investment Tree",
+            "subtitle": "Learn fundamental concepts",
+            "action": "Explore tree",
+            "progress": "Progress:",
+            "completed": "completed",
+            "inProgress": "in progress"
+        },
+        "libraryCard": {
+            "title": "Wisdom Library",
+            "subtitle": "Read investment classics",
+            "action": "Explore library",
+            "progress": "Progress:",
+            "read": "excerpts read",
+            "started": "books started"
+        },
+        "motivation": {
+            "start": "Start your learning journey today! 🚀",
+            "early": "Great start! Keep it up! 💪",
+            "mid": "You are on the right track! Halfway there! 🎯",
+            "advanced": "Impressive! You are mastering the concepts! 🌟",
+            "finish": "Almost there! The finish line is near! 🏆",
+            "complete": "Congratulations! You completed all content! 🎉"
+        }
+    },
+    "lesson": {
+        "completeButton": "Complete Lesson",
+        "markComplete": "Mark as Complete",
+        "completing": "Saving...",
+        "completed": "Lesson Completed!",
+        "backButton": "Back",
+        "previousButton": "Previous Lesson",
+        "progress": "Lesson {{current}} of {{total}}"
+    },
+    "quiz": {
+        "startButton": "Start Quiz",
+        "nextButton": "Next",
+        "previousButton": "Previous",
+        "finishButton": "Finish Quiz",
+        "retryButton": "Try Again",
+        "backButton": "Back",
+        "reviewButton": "Review Lessons",
+        "continueButton": "Continue",
+        "progress": "Question {{current}} of {{total}}",
+        "answered": "{{count}}/{{total}} answered",
+        "review": {
+            "title": "Review Answers",
+            "yourAnswer": "Your answer:",
+            "correctAnswer": "Correct answer:"
+        },
+        "results": {
+            "title": "Result",
+            "score": "{{correct}} of {{total}} questions correct",
+            "success": {
+                "title": "🎉 Congratulations!",
+                "message": "You passed the quiz and unlocked the next level!"
+            },
+            "failure": {
+                "title": "Almost there!",
+                "message": "You need 70% to pass. Review the lessons and try again."
+            }
+        }
+    },
+    "achievements": {
+        "title": "Achievements",
+        "progress": "{{unlocked}} of {{total}} unlocked",
+        "unlockedNotification": "Achievement Unlocked!",
+        "unlockedAt": "Unlocked on {{date}}",
+        "categories": {
+            "all": "All",
+            "milestone": "Milestones",
+            "streak": "Streak",
+            "mastery": "Mastery",
+            "special": "Special"
+        }
+    },
+    "page": {
+        "title": "Education Hub",
+        "achievementsButton": "Achievements",
+        "tabs": {
+            "overview": "Overview",
+            "tree": "Investment Tree",
+            "library": "Wisdom Library"
+        }
+    }
+}

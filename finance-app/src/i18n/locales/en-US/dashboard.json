@@ -1,0 +1,34 @@
+{
+    "greeting": "Hello, {{name}}!",
+    "subtitle": "Here's a summary of your financial situation",
+    "cards": {
+        "income": {
+            "title": "Monthly Income",
+            "vsLastMonth": "vs last month"
+        },
+        "expense": {
+            "title": "Monthly Expense",
+            "vsLastMonth": "vs last month"
+        },
+        "goals": {
+            "title": "My Goals"
+        },
+        "creditCards": {
+            "title": "Credit Cards"
+        }
+    },
+    "chart": {
+        "title": "Annual Performance",
+        "viewExpense": "Viewing expenses by card",
+        "viewProfit": "Viewing monthly profit (Income - Expenses)",
+        "toggleExpense": "Expenses",
+        "toggleProfit": "Profit"
+    },
+    "categories": {
+        "title": "Expenses by Category"
+    },
+    "goalsSection": {
+        "title": "Goals in Focus",
+        "viewAll": "View all goals"
+    }
+}

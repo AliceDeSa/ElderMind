@@ -1,0 +1,23 @@
+{
+    "title": "Financial Goals",
+    "addButton": "New Goal",
+    "form": {
+        "name": "Goal Name",
+        "targetAmount": "Target Amount",
+        "currentAmount": "Current Amount",
+        "deadline": "Deadline",
+        "category": "Category"
+    },
+    "progress": "Progress",
+    "remaining": "Remaining",
+    "achieved": "Goal Achieved! 🎉",
+    "categories": {
+        "emergency": "Emergency",
+        "travel": "Travel",
+        "car": "Car",
+        "house": "House",
+        "education": "Education",
+        "retirement": "Retirement",
+        "other": "Other"
+    }
+}

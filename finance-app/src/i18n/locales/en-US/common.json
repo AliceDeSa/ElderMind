@@ -1,0 +1,53 @@
+{
+    "buttons": {
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "edit": "Edit",
+        "add": "Add",
+        "close": "Close",
+        "confirm": "Confirm",
+        "back": "Back",
+        "next": "Next",
+        "finish": "Finish",
+        "create": "Create",
+        "update": "Update",
+        "remove": "Remove"
+    },
+    "labels": {
+        "name": "Name",
+        "description": "Description",
+        "value": "Value",
+        "amount": "Amount",
+        "date": "Date",
+        "category": "Category",
+        "tag": "Tag",
+        "limit": "Limit",
+        "dueDate": "Due Date",
+        "installments": "Installments",
+        "total": "Total",
+        "available": "Available",
+        "used": "Used"
+    },
+    "months": {
+        "january": "January",
+        "february": "February",
+        "march": "March",
+        "april": "April",
+        "may": "May",
+        "june": "June",
+        "july": "July",
+        "august": "August",
+        "september": "September",
+        "october": "October",
+        "november": "November",
+        "december": "December"
+    },
+    "messages": {
+        "loading": "Loading...",
+        "error": "Error processing request",
+        "success": "Operation completed successfully",
+        "confirmDelete": "Are you sure you want to delete?",
+        "noData": "No data available"
+    }
+}

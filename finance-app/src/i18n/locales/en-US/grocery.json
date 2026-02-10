@@ -1,0 +1,95 @@
+{
+    "title": "Shopping List",
+    "subtitle": "Plan your shopping and track your spending",
+    "newList": "New List",
+    "addItem": "Add Item",
+    "editList": "Edit List",
+    "deleteList": "Delete List",
+    "completeList": "Complete Shopping",
+    "listName": "List Name",
+    "listNamePlaceholder": "Ex: Monthly Shopping",
+    "status": {
+        "planning": "Planning",
+        "shopping": "Shopping",
+        "completed": "Completed"
+    },
+    "categories": {
+        "frutas": "Fruits",
+        "verduras": "Vegetables",
+        "carnes": "Meat & Fish",
+        "laticínios": "Dairy",
+        "padaria": "Bakery",
+        "limpeza": "Cleaning",
+        "higiene": "Personal Care",
+        "bebidas": "Beverages",
+        "congelados": "Frozen",
+        "outros": "Other"
+    },
+    "units": {
+        "kg": "kg",
+        "g": "g",
+        "L": "L",
+        "mL": "mL",
+        "un": "unit",
+        "dz": "dozen",
+        "pct": "pack"
+    },
+    "item": {
+        "name": "Item Name",
+        "namePlaceholder": "Ex: Banana",
+        "category": "Category",
+        "quantity": "Quantity",
+        "unit": "Unit",
+        "estimatedPrice": "Estimated Price",
+        "actualPrice": "Actual Price",
+        "notes": "Notes",
+        "notesPlaceholder": "Ex: Prefer organic",
+        "purchased": "Purchased",
+        "notPurchased": "Not purchased"
+    },
+    "totals": {
+        "estimated": "Estimated Total",
+        "actual": "Total Spent",
+        "saved": "Saved",
+        "exceeded": "Exceeded",
+        "itemsTotal": "{{count}} item",
+        "itemsTotal_plural": "{{count}} items",
+        "purchasedItems": "{{count}}/{{total}} purchased"
+    },
+    "actions": {
+        "markAsPurchased": "Mark as Purchased",
+        "markAsNotPurchased": "Unmark",
+        "editItem": "Edit Item",
+        "deleteItem": "Delete Item",
+        "startShopping": "Start Shopping",
+        "finishShopping": "Finish Shopping",
+        "viewHistory": "View History"
+    },
+    "messages": {
+        "noLists": "You don't have any shopping lists yet",
+        "noItems": "Add items to your list",
+        "createFirstList": "Create your first shopping list",
+        "listCreated": "List created successfully!",
+        "listUpdated": "List updated!",
+        "listDeleted": "List deleted",
+        "itemAdded": "Item added!",
+        "itemUpdated": "Item updated!",
+        "itemDeleted": "Item removed",
+        "confirmDelete": "Are you sure you want to delete this list?",
+        "confirmDeleteItem": "Delete this item?",
+        "allItemsPurchased": "All items purchased! 🎉"
+    },
+    "stats": {
+        "totalLists": "Total Lists",
+        "activeLists": "Active Lists",
+        "completedLists": "Completed",
+        "totalSaved": "Total Saved",
+        "averageSavings": "Average Savings"
+    },
+    "filters": {
+        "all": "All",
+        "active": "Active",
+        "completed": "Completed",
+        "byCategory": "By Category"
+    }
+}

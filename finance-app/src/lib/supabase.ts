@@ -1,19 +1,34 @@
-import { createClient } from '@supabase/supabase-js';
+/**
+ * Cliente Supabase - Singleton
+ * Configuração centralizada para acesso ao banco de dados
+ */
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import Logger from '../core/Logger';
 
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
+
+// Validação de variáveis de ambiente
 if (!supabaseUrl || !supabaseAnonKey) {
-    console.error('Supabase URL or Anon Key is missing. Check your .env file.');
+    Logger.sys('ERRO: Variáveis de ambiente Supabase não configuradas');
+    throw new Error('Supabase URL ou Anon Key ausentes. Verifique seu arquivo .env');
 }
 
-// Reuse existing client if already initialized (prevents "Multiple GoTrueClient instances" warning during HMR)
-const supabase = (typeof window !== 'undefined' && window._supabase)
-    ? window._supabase
-    : createClient(supabaseUrl, supabaseAnonKey);
+// Reutiliza cliente existente se já inicializado (previne múltiplas instâncias durante HMR)
+const getSupabaseClient = (): SupabaseClient => {
+    if (typeof window !== 'undefined' && (window as any)._supabase) {
+        return (window as any)._supabase;
+    }
 
-if (typeof window !== 'undefined') {
-    window._supabase = supabase;
-}
+    Logger.sys('Inicializando cliente Supabase');
+    const client = createClient(supabaseUrl, supabaseAnonKey);
 
-export { supabase };
+    if (typeof window !== 'undefined') {
+        (window as any)._supabase = client;
+    }
+
+    return client;
+};
+
+export const supabase = getSupabaseClient();

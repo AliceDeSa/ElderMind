@@ -3,7 +3,7 @@ import Button from '../Button';
 import Input from '../Input';
 import MonthSelector from '../MonthSelector';
 import { Plus, Trash2, Repeat, DollarSign, Edit2, X, Check, ChevronDown, ChevronUp } from 'lucide-react';
-import { useFinance } from '../../context/FinanceContext';
+import { useFinance } from '../../context/FinanceProvider';
 
 export default function IncomeTab() {
     const {

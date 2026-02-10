@@ -1,0 +1,63 @@
+{
+    "income": {
+        "title": "Income",
+        "addButton": "New Income",
+        "form": {
+            "description": "Description",
+            "amount": "Amount ($)",
+            "date": "Date",
+            "category": "Category",
+            "recurring": "Recurring"
+        },
+        "categories": {
+            "salary": "Salary",
+            "freelance": "Freelance",
+            "investment": "Investment",
+            "other": "Other"
+        }
+    },
+    "expenses": {
+        "title": "Expense Wallet",
+        "subtitle": "Drag items between cards to organize",
+        "addCard": "New Card",
+        "addExpense": "Add Expense",
+        "form": {
+            "description": "Description",
+            "amount": "Amount ($)",
+            "category": "Category",
+            "installments": "Installments",
+            "relatedGoal": "Related Goal",
+            "tag": "Tag / Marker"
+        },
+        "card": {
+            "dueDay": "Due day",
+            "available": "Available",
+            "currentBill": "Current Bill",
+            "transactions": "Transactions"
+        },
+        "modal": {
+            "newExpense": "New Expense",
+            "editExpense": "Edit Expense",
+            "newCard": "New Card",
+            "cardName": "Card Name",
+            "cardLimit": "Limit ($)",
+            "cardDueDate": "Due Date"
+        }
+    },
+    "calculator": {
+        "title": "Compound Interest Calculator",
+        "subtitle": "Simulate your investment growth",
+        "form": {
+            "initialValue": "Initial Value",
+            "monthlyContribution": "Monthly Contribution",
+            "interestRate": "Interest Rate (% p.a.)",
+            "period": "Period (years)"
+        },
+        "results": {
+            "title": "Simulation Results",
+            "totalInvested": "Total Invested",
+            "totalInterest": "Accumulated Interest",
+            "finalValue": "Final Value"
+        }
+    }
+}

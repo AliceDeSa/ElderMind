@@ -1,69 +1,64 @@
-import { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import RecoverPassword from './pages/RecoverPassword';
-import Dashboard from './pages/Dashboard';
+import Dashboard from './pages/Dashboard/Dashboard';
 import IncomesExpenses from './pages/IncomesExpenses';
 import Goals from './pages/Goals';
 import ObjectivesPage from './pages/ObjectivesPage';
-import Education from './pages/Education';
-import Calculator from './pages/Calculator';
+import Education from './pages/Education/Education';
+import Calculator from './pages/Calculator/Calculator';
+import GroceryPage from './features/grocery/GroceryPage';
 import DashboardLayout from './layouts/DashboardLayout';
-import { AuthProvider, useAuth } from './context/AuthContext';
-import { FinanceProvider } from './context/FinanceContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import { AuthProvider } from './context/AuthContext';
+import { FinanceProvider } from './context/FinanceProvider';
+import PWAUpdatePrompt from './components/PWAUpdatePrompt';
+import PWAInstallPrompt from './components/PWAInstallPrompt';
+import Logger from './core/Logger';
 
-function Router() {
-  const { user, loading } = useAuth();
-  const [route, setRoute] = useState(window.location.hash || '');
+Logger.sys('ElderMind Finance App inicializando...');
 
-  useEffect(() => {
-    const handleHashChange = () => setRoute(window.location.hash);
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
-  }, []);
-
-  if (loading) {
-    return <div className="min-h-screen bg-background flex items-center justify-center text-textMain">Carregando...</div>;
-  }
-
-  // If user is logged in
-  if (user) {
-    // Check if current route is a known tab, otherwise default to dashboard
-    const knownHashes = ['#finances', '#goals', '#objectives', '#education', '#calculator'];
-    const showDashboard = !route || route === '' || route === '#dashboard' || !knownHashes.includes(route.split('=')[0]);
-
-    return (
-      <FinanceProvider>
-        <DashboardLayout>
-          {showDashboard && <Dashboard />}
-          {route === '#finances' && <IncomesExpenses />}
-          {route === '#goals' && <Goals />}
-          {route === '#objectives' && <ObjectivesPage />}
-          {route === '#education' && <Education />}
-          {route === '#calculator' && <Calculator />}
-        </DashboardLayout>
-      </FinanceProvider>
-    );
-  }
-
-  // Public Routes
-  if (route === '#register') {
-    return <Register />;
-  }
-
-  if (route === '#recover') {
-    return <RecoverPassword />;
-  }
-
-  return <Login />;
-}
-
-function App() {
+function App(): JSX.Element {
   return (
     <AuthProvider>
-      <Router />
+      <BrowserRouter basename="/ElderMind">
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/recover" element={<RecoverPassword />} />
+
+          {/* Protected Routes */}
+          <Route
+            path="/*"
+            element={
+              <ProtectedRoute>
+                <FinanceProvider>
+                  <DashboardLayout>
+                    <Routes>
+                      <Route path="/" element={<Dashboard />} />
+                      <Route path="/dashboard" element={<Dashboard />} />
+                      <Route path="/finances" element={<IncomesExpenses />} />
+                      <Route path="/goals" element={<Goals />} />
+                      <Route path="/objectives" element={<ObjectivesPage />} />
+                      <Route path="/education" element={<Education />} />
+                      <Route path="/calculator" element={<Calculator />} />
+                      <Route path="/grocery" element={<GroceryPage />} />
+                      <Route path="*" element={<Navigate to="/" replace />} />
+                    </Routes>
+                  </DashboardLayout>
+                </FinanceProvider>
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+        <PWAUpdatePrompt />
+        <PWAInstallPrompt />
+      </BrowserRouter>
     </AuthProvider>
   );
 }
 
 export default App;
+

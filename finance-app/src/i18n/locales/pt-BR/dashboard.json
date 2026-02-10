@@ -1,0 +1,34 @@
+{
+    "greeting": "Olá, {{name}}!",
+    "subtitle": "Aqui está um resumo da sua situação financeira",
+    "cards": {
+        "income": {
+            "title": "Receita Mensal",
+            "vsLastMonth": "vs mês anterior"
+        },
+        "expense": {
+            "title": "Gasto Mensal",
+            "vsLastMonth": "vs mês anterior"
+        },
+        "goals": {
+            "title": "Minhas Metas"
+        },
+        "creditCards": {
+            "title": "Cartões de Crédito"
+        }
+    },
+    "chart": {
+        "title": "Desempenho Anual",
+        "viewExpense": "Visualizando gastos por cartão",
+        "viewProfit": "Visualizando lucro mensal (Receita - Gastos)",
+        "toggleExpense": "Gastos",
+        "toggleProfit": "Lucro"
+    },
+    "categories": {
+        "title": "Gastos por Categoria"
+    },
+    "goalsSection": {
+        "title": "Metas em Foco",
+        "viewAll": "Ver todas as metas"
+    }
+}

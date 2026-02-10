@@ -1,0 +1,63 @@
+{
+    "income": {
+        "title": "Receitas",
+        "addButton": "Nova Receita",
+        "form": {
+            "description": "Descrição",
+            "amount": "Valor (R$)",
+            "date": "Data",
+            "category": "Categoria",
+            "recurring": "Recorrente"
+        },
+        "categories": {
+            "salary": "Salário",
+            "freelance": "Freelance",
+            "investment": "Investimento",
+            "other": "Outros"
+        }
+    },
+    "expenses": {
+        "title": "Carteira de Despesas",
+        "subtitle": "Arraste os itens entre cartões para organizar",
+        "addCard": "Novo Cartão",
+        "addExpense": "Adicionar Gasto",
+        "form": {
+            "description": "Descrição",
+            "amount": "Valor (R$)",
+            "category": "Categoria",
+            "installments": "Parcelas",
+            "relatedGoal": "Meta Relacionada",
+            "tag": "Tag / Marcador"
+        },
+        "card": {
+            "dueDay": "Vence dia",
+            "available": "Disponível",
+            "currentBill": "Fatura Atual",
+            "transactions": "Lançamentos"
+        },
+        "modal": {
+            "newExpense": "Novo Gasto",
+            "editExpense": "Editar Gasto",
+            "newCard": "Novo Cartão",
+            "cardName": "Nome do Cartão",
+            "cardLimit": "Limite (R$)",
+            "cardDueDate": "Dia de Vencimento"
+        }
+    },
+    "calculator": {
+        "title": "Calculadora de Juros Compostos",
+        "subtitle": "Simule o crescimento do seu investimento",
+        "form": {
+            "initialValue": "Valor Inicial",
+            "monthlyContribution": "Aporte Mensal",
+            "interestRate": "Taxa de Juros (% a.a.)",
+            "period": "Período (anos)"
+        },
+        "results": {
+            "title": "Resultados da Simulação",
+            "totalInvested": "Total Investido",
+            "totalInterest": "Juros Acumulados",
+            "finalValue": "Valor Final"
+        }
+    }
+}

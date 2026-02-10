@@ -1,0 +1,96 @@
+{
+    "title": "Lista de Compras",
+    "subtitle": "Planeje suas compras e controle seus gastos",
+    "newList": "Nova Lista",
+    "addItem": "Adicionar Item",
+    "editList": "Editar Lista",
+    "deleteList": "Excluir Lista",
+    "completeList": "Finalizar Compras",
+    "listName": "Nome da Lista",
+    "listNamePlaceholder": "Ex: Compras do Mês",
+    "status": {
+        "planning": "Planejando",
+        "shopping": "Comprando",
+        "completed": "Finalizada"
+    },
+    "categories": {
+        "frutas": "Frutas",
+        "verduras": "Verduras e Legumes",
+        "carnes": "Carnes e Peixes",
+        "laticínios": "Laticínios",
+        "padaria": "Padaria",
+        "limpeza": "Limpeza",
+        "higiene": "Higiene Pessoal",
+        "bebidas": "Bebidas",
+        "congelados": "Congelados",
+        "outros": "Outros"
+    },
+    "units": {
+        "kg": "kg",
+        "g": "g",
+        "L": "L",
+        "mL": "mL",
+        "un": "unidade",
+        "dz": "dúzia",
+        "pct": "pacote"
+    },
+    "item": {
+        "name": "Nome do Item",
+        "namePlaceholder": "Ex: Banana",
+        "category": "Categoria",
+        "quantity": "Quantidade",
+        "unit": "Unidade",
+        "estimatedPrice": "Preço Estimado",
+        "actualPrice": "Preço Real",
+        "notes": "Observações",
+        "notesPlaceholder": "Ex: Preferir orgânico",
+        "purchased": "Comprado",
+        "notPurchased": "Não comprado"
+    },
+    "totals": {
+        "estimated": "Total Estimado",
+        "actual": "Total Gasto",
+        "saved": "Economia",
+        "exceeded": "Excedeu",
+        "itemsTotal": "{{count}} item",
+        "itemsTotal_plural": "{{count}} itens",
+        "purchasedItems": "{{count}}/{{total}} comprado",
+        "purchasedItems_plural": "{{count}}/{{total}} comprados"
+    },
+    "actions": {
+        "markAsPurchased": "Marcar como Comprado",
+        "markAsNotPurchased": "Desmarcar",
+        "editItem": "Editar Item",
+        "deleteItem": "Excluir Item",
+        "startShopping": "Iniciar Compras",
+        "finishShopping": "Finalizar Compras",
+        "viewHistory": "Ver Histórico"
+    },
+    "messages": {
+        "noLists": "Você ainda não tem listas de compras",
+        "noItems": "Adicione itens à sua lista",
+        "createFirstList": "Crie sua primeira lista de compras",
+        "listCreated": "Lista criada com sucesso!",
+        "listUpdated": "Lista atualizada!",
+        "listDeleted": "Lista excluída",
+        "itemAdded": "Item adicionado!",
+        "itemUpdated": "Item atualizado!",
+        "itemDeleted": "Item removido",
+        "confirmDelete": "Tem certeza que deseja excluir esta lista?",
+        "confirmDeleteItem": "Excluir este item?",
+        "allItemsPurchased": "Todos os itens foram comprados! 🎉"
+    },
+    "stats": {
+        "totalLists": "Total de Listas",
+        "activeLists": "Listas Ativas",
+        "completedLists": "Finalizadas",
+        "totalSaved": "Economia Total",
+        "averageSavings": "Economia Média"
+    },
+    "filters": {
+        "all": "Todas",
+        "active": "Ativas",
+        "completed": "Finalizadas",
+        "byCategory": "Por Categoria"
+    }
+}

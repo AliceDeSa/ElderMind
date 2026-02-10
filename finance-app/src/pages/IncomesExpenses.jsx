@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import IncomeTab from '../components/finance/IncomeTab';
-import ExpensesTab from '../components/finance/ExpensesTab';
+import ExpensesTab from '../components/finance/expenses/ExpensesTab';
 import AnalysisTab from '../components/finance/AnalysisTab';
 
 export default function IncomesExpenses() {

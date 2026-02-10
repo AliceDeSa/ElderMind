@@ -1,10 +1,10 @@
 import { useState, useEffect, useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
 import { ChevronDown, ChevronUp, AlertCircle, CheckCircle2, X, Coffee, Home, Car, Utensils, ShoppingBag, Globe, MoreHorizontal } from 'lucide-react';
-import { useFinance } from '../../context/FinanceContext';
+import { useFinance } from '../../context/FinanceProvider';
 
 export default function AnalysisTab() {
-    const { incomes, expenses, cards, budgetAllocation, selectedMonth, getYearlyStats } = useFinance();
+    const { incomes, expenses, cards, budgetAllocation, getYearlyStats } = useFinance();
     const [data, setData] = useState([]);
     const [selectedMonthIndex, setSelectedMonthIndex] = useState(new Date().getMonth());
     const [selectedCardFilter, setSelectedCardFilter] = useState(null);

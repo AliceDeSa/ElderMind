@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Target, Plus, Plane, Car, Home, ShoppingBag, Gift, Trash2, Edit2, Calendar, TrendingUp, DollarSign } from 'lucide-react';
-import { useFinance } from '../../context/FinanceContext';
+import { useFinance } from '../../context/FinanceProvider';
 
 const icons = [
     { name: 'Target', icon: Target },

@@ -1,0 +1,106 @@
+{
+    "title": "Educação Financeira",
+    "tabs": {
+        "lessons": "Aulas",
+        "quizzes": "Quizzes"
+    },
+    "stats": {
+        "lessonsCompleted": "Aulas Concluídas",
+        "quizzesCompleted": "Quizzes Concluídos",
+        "averageScore": "Média de Acertos",
+        "overallProgress": "Progresso Geral",
+        "activitiesCompleted": "Atividades concluídas",
+        "timeInvested": "Tempo investido",
+        "currentStreak": "Sequência atual",
+        "days": "dias"
+    },
+    "overview": {
+        "welcome": "Bem-vindo ao Hub Educacional! 👋",
+        "subtitle": "Continue sua jornada de aprendizado em investimentos",
+        "continueLearning": "Continue Aprendendo",
+        "treeCard": {
+            "title": "Árvore de Investimentos",
+            "subtitle": "Aprenda conceitos fundamentais",
+            "action": "Explorar árvore",
+            "progress": "Progresso:",
+            "completed": "concluídos",
+            "inProgress": "em progresso"
+        },
+        "libraryCard": {
+            "title": "Biblioteca de Sabedoria",
+            "subtitle": "Leia clássicos de investimentos",
+            "action": "Explorar biblioteca",
+            "progress": "Progresso:",
+            "read": "trechos lidos",
+            "started": "livros iniciados"
+        },
+        "motivation": {
+            "start": "Comece sua jornada de aprendizado hoje! 🚀",
+            "early": "Ótimo começo! Continue assim! 💪",
+            "mid": "Você está no caminho certo! Metade da jornada concluída! 🎯",
+            "advanced": "Impressionante! Você está dominando os conceitos! 🌟",
+            "finish": "Quase lá! A linha de chegada está próxima! 🏆",
+            "complete": "Parabéns! Você completou todo o conteúdo! 🎉"
+        }
+    },
+    "lesson": {
+        "completeButton": "Concluir Aula",
+        "markComplete": "Marcar como Completa",
+        "completing": "Salvando...",
+        "completed": "Lição Completa!",
+        "backButton": "Voltar",
+        "previousButton": "Lição Anterior",
+        "progress": "Lição {{current}} de {{total}}"
+    },
+    "quiz": {
+        "startButton": "Iniciar Quiz",
+        "nextButton": "Próxima",
+        "previousButton": "Anterior",
+        "finishButton": "Finalizar Quiz",
+        "retryButton": "Tentar Novamente",
+        "backButton": "Voltar",
+        "reviewButton": "Revisar Lições",
+        "continueButton": "Continuar",
+        "progress": "Questão {{current}} de {{total}}",
+        "answered": "{{count}}/{{total}} respondidas",
+        "review": {
+            "title": "Revisão das Respostas",
+            "yourAnswer": "Sua resposta:",
+            "correctAnswer": "Resposta correta:"
+        },
+        "results": {
+            "title": "Resultado",
+            "score": "{{correct}} de {{total}} questões corretas",
+            "success": {
+                "title": "🎉 Parabéns!",
+                "message": "Você passou no quiz e desbloqueou o próximo nível!"
+            },
+            "failure": {
+                "title": "Quase lá!",
+                "message": "Você precisa de 70% para passar. Revise as lições e tente novamente."
+            }
+        }
+    },
+    "achievements": {
+        "title": "Conquistas",
+        "progress": "{{unlocked}} de {{total}} desbloqueadas",
+        "unlockedNotification": "Conquista Desbloqueada!",
+        "unlockedAt": "Desbloqueada em {{date}}",
+        "categories": {
+            "all": "Todas",
+            "milestone": "Marcos",
+            "streak": "Sequência",
+            "mastery": "Maestria",
+            "special": "Especiais"
+        }
+    },
+    "page": {
+        "title": "Hub Educacional",
+        "achievementsButton": "Conquistas",
+        "tabs": {
+            "overview": "Visão Geral",
+            "tree": "Árvore de Investimentos",
+            "library": "Biblioteca de Sabedoria"
+        }
+    }
+}

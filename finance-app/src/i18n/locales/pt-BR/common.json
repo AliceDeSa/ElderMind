@@ -1,0 +1,66 @@
+{
+    "buttons": {
+        "save": "Salvar",
+        "cancel": "Cancelar",
+        "delete": "Excluir",
+        "edit": "Editar",
+        "add": "Adicionar",
+        "close": "Fechar",
+        "confirm": "Confirmar",
+        "back": "Voltar",
+        "next": "Próximo",
+        "finish": "Concluir",
+        "create": "Criar",
+        "update": "Atualizar",
+        "remove": "Remover"
+    },
+    "labels": {
+        "name": "Nome",
+        "description": "Descrição",
+        "value": "Valor",
+        "amount": "Valor",
+        "date": "Data",
+        "category": "Categoria",
+        "tag": "Tag",
+        "limit": "Limite",
+        "dueDate": "Vencimento",
+        "installments": "Parcelas",
+        "total": "Total",
+        "available": "Disponível",
+        "used": "Utilizado"
+    },
+    "months": {
+        "january": "Janeiro",
+        "february": "Fevereiro",
+        "march": "Março",
+        "april": "Abril",
+        "may": "Maio",
+        "june": "Junho",
+        "july": "Julho",
+        "august": "Agosto",
+        "september": "Setembro",
+        "october": "Outubro",
+        "november": "Novembro",
+        "december": "Dezembro"
+    },
+    "messages": {
+        "loading": "Carregando...",
+        "error": "Erro ao processar solicitação",
+        "success": "Operação realizada com sucesso",
+        "confirmDelete": "Deseja realmente excluir?",
+        "noData": "Nenhum dado disponível"
+    },
+    "actions": {
+        "create": "Criar",
+        "cancel": "Cancelar",
+        "back": "Voltar"
+    },
+    "menu": {
+        "dashboard": "Dashboard",
+        "finances": "Finanças",
+        "goals": "Metas",
+        "education": "Educação",
+        "calculator": "Calculadora",
+        "grocery": "Lista de Compras"
+    }
+}

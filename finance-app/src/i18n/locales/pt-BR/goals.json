@@ -1,0 +1,23 @@
+{
+    "title": "Metas Financeiras",
+    "addButton": "Nova Meta",
+    "form": {
+        "name": "Nome da Meta",
+        "targetAmount": "Valor Alvo",
+        "currentAmount": "Valor Atual",
+        "deadline": "Prazo",
+        "category": "Categoria"
+    },
+    "progress": "Progresso",
+    "remaining": "Faltam",
+    "achieved": "Meta Alcançada! 🎉",
+    "categories": {
+        "emergency": "Emergência",
+        "travel": "Viagem",
+        "car": "Carro",
+        "house": "Casa",
+        "education": "Educação",
+        "retirement": "Aposentadoria",
+        "other": "Outros"
+    }
+}

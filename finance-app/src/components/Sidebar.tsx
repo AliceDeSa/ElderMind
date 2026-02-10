@@ -1,25 +1,34 @@
-import { LayoutDashboard, Wallet, PieChart, Crosshair, GraduationCap, Calculator, Shield, Heart, LogOut, X } from 'lucide-react';
+import { LayoutDashboard, Wallet, PieChart, Crosshair, GraduationCap, Calculator, Shield, ShoppingCart, Heart, LogOut, X } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-export default function Sidebar({ isOpen, onClose }) {
+interface SidebarProps {
+  isOpen: boolean;
+  onClose?: () => void;
+}
+
+export default function Sidebar({ isOpen, onClose }: SidebarProps): JSX.Element {
   const { logout } = useAuth();
+  const location = useLocation();
 
-  // Helper to check active state based on hash
-  const isActive = (hash) => window.location.hash === hash;
+  const isActive = (path: string): boolean => {
+    if (path === '/') return location.pathname === '/' || location.pathname === '/dashboard';
+    return location.pathname === path;
+  };
 
-  const handleNavClick = (hash) => {
-    window.location.hash = hash;
+  const handleNavClick = (): void => {
     if (onClose) onClose();
   };
 
   const menuItems = [
-    { icon: LayoutDashboard, label: 'Painel', hash: '', active: isActive('') || isActive('#dashboard') },
-    { icon: Wallet, label: 'Rendas e Gastos', hash: '#finances', active: isActive('#finances') },
-    { icon: PieChart, label: 'Orçamento', hash: '#goals', active: isActive('#goals') },
-    { icon: Crosshair, label: 'Objetivos', hash: '#objectives', active: isActive('#objectives') },
-    { icon: GraduationCap, label: 'Educação', hash: '#education', active: isActive('#education') },
-    { icon: Calculator, label: 'Calculadora', hash: '#calculator', active: isActive('#calculator') },
-    { icon: Shield, label: 'Reserva de Emergência', hash: '#emergency', active: isActive('#emergency') },
+    { icon: LayoutDashboard, label: 'Painel', path: '/', active: isActive('/') },
+    { icon: Wallet, label: 'Rendas e Gastos', path: '/finances', active: isActive('/finances') },
+    { icon: PieChart, label: 'Orçamento', path: '/goals', active: isActive('/goals') },
+    { icon: Crosshair, label: 'Objetivos', path: '/objectives', active: isActive('/objectives') },
+    { icon: GraduationCap, label: 'Educação', path: '/education', active: isActive('/education') },
+    { icon: Calculator, label: 'Calculadora', path: '/calculator', active: isActive('/calculator') },
+    { icon: ShoppingCart, label: 'Lista de Compras', path: '/grocery', active: isActive('/grocery') },
+    { icon: Shield, label: 'Reserva de Emergência', path: '/emergency', active: isActive('/emergency') },
   ];
 
   return (
@@ -52,9 +61,10 @@ export default function Sidebar({ isOpen, onClose }) {
         {/* Navigation */}
         <nav className="flex-1 px-4 space-y-2 overflow-y-auto">
           {menuItems.map((item, index) => (
-            <button
+            <Link
               key={index}
-              onClick={() => handleNavClick(item.hash)}
+              to={item.path}
+              onClick={handleNavClick}
               className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 group
                 ${item.active
                   ? 'bg-primary/10 text-primary'
@@ -63,7 +73,7 @@ export default function Sidebar({ isOpen, onClose }) {
             >
               <item.icon size={22} className={item.active ? 'text-primary' : 'text-textSecondary group-hover:text-textMain'} />
               <span className="font-medium text-sm">{item.label}</span>
-            </button>
+            </Link>
           ))}
         </nav>
 

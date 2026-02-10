@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
-import { useFinance } from '../context/FinanceContext';
+import { useFinance } from '../context/FinanceProvider';
 
 export default function Goals() {
     const { budgetAllocation, updateBudgetAllocation } = useFinance();
