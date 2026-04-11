@@ -9,6 +9,7 @@ import ObjectivesPage from './pages/ObjectivesPage';
 import Education from './pages/Education/Education';
 import Calculator from './pages/Calculator/Calculator';
 import GroceryPage from './features/grocery/GroceryPage';
+import EmergencyReserve from './pages/EmergencyReserve/EmergencyReserve';
 import DashboardLayout from './layouts/DashboardLayout';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
@@ -45,6 +46,7 @@ function App(): JSX.Element {
                       <Route path="/education" element={<Education />} />
                       <Route path="/calculator" element={<Calculator />} />
                       <Route path="/grocery" element={<GroceryPage />} />
+                      <Route path="/emergency" element={<EmergencyReserve />} />
                       <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
                   </DashboardLayout>

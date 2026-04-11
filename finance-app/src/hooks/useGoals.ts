@@ -29,7 +29,7 @@ export function useGoals(userId: string | undefined): UseGoalsReturn {
                 .from('financial_goals')
                 .select('*')
                 .eq('user_id', userId)
-                .order('created_at', { ascending: true });
+                .order('updated_at', { ascending: true });
 
             if (error) throw error;
 

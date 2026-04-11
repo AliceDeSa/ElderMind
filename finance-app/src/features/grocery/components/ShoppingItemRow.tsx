@@ -1,11 +1,6 @@
-/**
- * ShoppingItemRow Component
- * Exibe um item individual da lista de compras
- */
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Check, X, Edit2, Trash2 } from 'lucide-react';
+import { Trash2, GripVertical } from 'lucide-react';
 import type { ShoppingItem, UpdateShoppingItemInput } from '../types/grocery.types';
 
 interface ShoppingItemRowProps {
@@ -13,147 +8,152 @@ interface ShoppingItemRowProps {
     onUpdate: (itemId: string, input: UpdateShoppingItemInput) => Promise<boolean>;
     onDelete: (itemId: string) => Promise<boolean>;
     onTogglePurchased: (itemId: string, isPurchased: boolean) => Promise<boolean>;
+    // DND
+    onDragStart?: (e: React.DragEvent, id: string) => void;
+    onDragOver?: (e: React.DragEvent) => void;
+    onDrop?: (e: React.DragEvent, targetId: string) => void;
+    isDragging?: boolean;
 }
 
 export default function ShoppingItemRow({
     item,
     onUpdate,
     onDelete,
-    onTogglePurchased
+    onTogglePurchased,
+    onDragStart,
+    onDragOver,
+    onDrop,
+    isDragging
 }: ShoppingItemRowProps) {
     const { t } = useTranslation('grocery');
-    const [isEditing, setIsEditing] = useState(false);
-    const [actualPrice, setActualPrice] = useState(item.actual_price?.toString() || '');
+    const [name, setName] = useState(item.name);
+    const [stock, setStock] = useState((item.stock || 0).toString());
+    const [quantity, setQuantity] = useState(item.quantity.toString());
+    const [notes, setNotes] = useState(item.notes || '');
+
+    // Sync with external updates
+    useEffect(() => {
+        setName(item.name);
+        setStock((item.stock || 0).toString());
+        setQuantity(item.quantity.toString());
+        setNotes(item.notes || '');
+    }, [item.name, item.quantity, item.stock, item.notes]);
 
     const handleToggle = async () => {
         await onTogglePurchased(item.id, !item.is_purchased);
     };
 
-    const handleSavePrice = async () => {
-        const price = parseFloat(actualPrice) || 0;
-        await onUpdate(item.id, { actual_price: price, is_purchased: true });
-        setIsEditing(false);
+    const handleDelete = async () => {
+        await onDelete(item.id);
     };
 
-    const handleDelete = async () => {
-        if (confirm(t('messages.confirmDeleteItem'))) {
-            await onDelete(item.id);
+    const handleBlur = () => {
+        const parsedQtd = parseFloat(quantity) || 1;
+        const parsedStock = parseFloat(stock) || 0;
+        const trimmedName = name.trim();
+        const trimmedNotes = notes.trim();
+
+        // Only update if something changed
+        if (
+            trimmedName !== item.name ||
+            parsedQtd !== item.quantity ||
+            parsedStock !== (item.stock || 0) ||
+            (trimmedNotes !== (item.notes || ''))
+        ) {
+            onUpdate(item.id, {
+                name: trimmedName || item.name, // fallback to old name if empty
+                quantity: parsedQtd,
+                stock: parsedStock,
+                notes: trimmedNotes
+            });
+            // Reset to prevent empty names visually
+            if (!trimmedName) setName(item.name);
+        }
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            e.currentTarget.blur();
         }
     };
 
     return (
         <div
+            draggable={!!onDragStart}
+            onDragStart={(e) => onDragStart?.(e, item.id)}
+            onDragOver={onDragOver}
+            onDrop={(e) => onDrop?.(e, item.id)}
             className={`
-        flex items-center gap-3 p-3 rounded-lg border transition-all
-        ${item.is_purchased
-                    ? 'bg-emerald-500/10 border-emerald-500/30'
-                    : 'bg-surfaceCard border-border/50'
+                group flex items-center gap-2 p-2 rounded-lg transition-all
+                ${isDragging ? 'opacity-50 border-2 border-dashed border-primary scale-[0.99] bg-surfaceCard/30' : 
+                  item.is_purchased
+                    ? 'opacity-60 bg-surfaceCard/50'
+                    : 'bg-surfaceCard hover:bg-surfaceCard/80 border border-border/30'
                 }
-      `}
+            `}
         >
-            {/* Checkbox */}
+            {/* Grip */}
+            {onDragStart && (
+                <div className="cursor-grab text-textSecondary opacity-30 hover:opacity-100 group-hover:opacity-100 flex-shrink-0 transition-opacity p-1">
+                    <GripVertical size={18} />
+                </div>
+            )}
+            {/* Nome */}
+            <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                onBlur={handleBlur}
+                onKeyDown={handleKeyDown}
+                placeholder="Nome do Item"
+                className={`flex-[2] min-w-[120px] bg-transparent outline-none px-2 py-1 text-sm transition-colors ${item.is_purchased ? 'line-through text-textSecondary' : 'text-textMain font-medium focus:bg-background/50 rounded'}`}
+            />
+
+            {/* Input Estoque */}
+            <div className="flex-[1] min-w-[60px]">
+                <input
+                    type="number"
+                    value={stock}
+                    onChange={(e) => setStock(e.target.value)}
+                    onBlur={handleBlur}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Estoque"
+                    className="w-full bg-transparent outline-none px-2 py-1 text-sm text-center text-textSecondary focus:bg-background/50 rounded"
+                />
+            </div>
+
+            {/* Input Comprar */}
+            <div className="flex-[1] min-w-[60px]">
+                <input
+                    type="number"
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
+                    onBlur={handleBlur}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Comprar"
+                    className="w-full bg-transparent outline-none px-2 py-1 text-sm text-center text-textSecondary focus:bg-background/50 rounded"
+                />
+            </div>
+
+            {/* Obs */}
+            <input
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                onBlur={handleBlur}
+                onKeyDown={handleKeyDown}
+                placeholder="Obs..."
+                className="flex-[2] min-w-[100px] bg-transparent outline-none px-2 py-1 text-sm text-textSecondary focus:bg-background/50 rounded"
+            />
+
+            {/* Delete Button - Only visible on hover or if purchased */}
             <button
-                onClick={handleToggle}
-                className={`
-          flex-shrink-0 w-6 h-6 rounded border-2 flex items-center justify-center transition-all
-          ${item.is_purchased
-                        ? 'bg-emerald-500 border-emerald-500'
-                        : 'border-textSecondary hover:border-primary'
-                    }
-        `}
+                onClick={handleDelete}
+                className={`p-1.5 rounded transition-all hover:bg-red-500/20 hover:text-red-500 
+                  ${item.is_purchased ? 'text-red-500/50' : 'text-textSecondary/30 opacity-0 group-hover:opacity-100'}
+                `}
+                title={t('actions.deleteItem')}
             >
-                {item.is_purchased && <Check size={16} className="text-white" />}
+                <Trash2 size={16} />
             </button>
-
-            {/* Item Info */}
-            <div className="flex-1 min-w-0">
-                <div className="flex items-baseline gap-2">
-                    <h4 className={`
-            font-medium
-            ${item.is_purchased ? 'text-textSecondary line-through' : 'text-white'}
-          `}>
-                        {item.name}
-                    </h4>
-                    <span className="text-xs text-textSecondary">
-                        {item.quantity} {t(`units.${item.unit}`)}
-                    </span>
-                </div>
-
-                <div className="flex items-center gap-2 mt-1">
-                    <span className="text-xs px-2 py-0.5 rounded bg-primary/20 text-primary">
-                        {t(`categories.${item.category}`)}
-                    </span>
-                    {item.notes && (
-                        <span className="text-xs text-textSecondary truncate">
-                            {item.notes}
-                        </span>
-                    )}
-                </div>
-            </div>
-
-            {/* Price Section */}
-            <div className="flex items-center gap-2">
-                {!isEditing ? (
-                    <>
-                        <div className="text-right">
-                            <div className="text-sm text-textSecondary">
-                                R$ {item.estimated_price.toFixed(2)}
-                            </div>
-                            {item.actual_price !== null && item.actual_price !== undefined && (
-                                <div className={`text-sm font-bold ${item.actual_price > item.estimated_price
-                                        ? 'text-red-500'
-                                        : 'text-emerald-500'
-                                    }`}>
-                                    R$ {item.actual_price.toFixed(2)}
-                                </div>
-                            )}
-                        </div>
-
-                        {item.is_purchased && !item.actual_price && (
-                            <button
-                                onClick={() => setIsEditing(true)}
-                                className="p-1.5 rounded hover:bg-primary/20 text-primary transition-colors"
-                                title={t('item.actualPrice')}
-                            >
-                                <Edit2 size={16} />
-                            </button>
-                        )}
-                    </>
-                ) : (
-                    <div className="flex items-center gap-1">
-                        <input
-                            type="number"
-                            step="0.01"
-                            value={actualPrice}
-                            onChange={(e) => setActualPrice(e.target.value)}
-                            className="w-20 px-2 py-1 text-sm bg-background border border-border rounded text-white"
-                            placeholder="0.00"
-                            autoFocus
-                        />
-                        <button
-                            onClick={handleSavePrice}
-                            className="p-1 rounded bg-emerald-500 hover:bg-emerald-600 text-white"
-                        >
-                            <Check size={14} />
-                        </button>
-                        <button
-                            onClick={() => setIsEditing(false)}
-                            className="p-1 rounded bg-red-500/20 hover:bg-red-500/30 text-red-500"
-                        >
-                            <X size={14} />
-                        </button>
-                    </div>
-                )}
-
-                {/* Delete Button */}
-                <button
-                    onClick={handleDelete}
-                    className="p-1.5 rounded hover:bg-red-500/20 text-red-500 transition-colors"
-                    title={t('actions.deleteItem')}
-                >
-                    <Trash2 size={16} />
-                </button>
-            </div>
         </div>
     );
 }

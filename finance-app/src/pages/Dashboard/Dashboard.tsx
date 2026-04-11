@@ -1,87 +1,160 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { useEducationStats } from '../../hooks/useEducationStats';
-import { useGoals } from '../../hooks/useGoals';
-import { useEducation } from '../../hooks/useEducation';
+import { useFinance } from '../../context/FinanceProvider';
 import MonthSelector from '../../components/MonthSelector';
 import SummaryCards from './SummaryCards';
 import YearlyChart from './YearlyChart';
-import EducationStats from '../Education/EducationStats';
-import { getMockIncome, getMockExpense, getCreditCards, getYearlyStats } from '../../data/mockDashboardData';
-
-interface YearlyStats {
-    month: string;
-    income: number;
-    expense: number;
-}
+import { Utensils, Home, Car, Globe, ShoppingBag, Coffee, MoreHorizontal } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
     const { user } = useAuth();
-    const educationHubStats = useEducationStats();
-    const { goals } = useGoals();
-    const { getNextLesson } = useEducation();
+    const {
+        incomes,
+        expenses,
+        financialGoals,
+        cards,
+        selectedMonth,
+        setSelectedMonth,
+        getSummary,
+        getYearlyStats
+    } = useFinance();
 
-    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
-    const [income, setIncome] = useState(0);
-    const [expense, setExpense] = useState(0);
-    const [creditCards, setCreditCards] = useState<any[]>([]);
-    const [yearlyData, setYearlyData] = useState<YearlyStats[]>([]);
+    // 1. Calculate Summary Data
+    const summary = getSummary();
+    const yearlyStats = getYearlyStats();
 
-    useEffect(() => {
-        // Simular carregamento de dados baseados no mês
-        setIncome(getMockIncome(selectedMonth));
-        setExpense(getMockExpense(selectedMonth));
-        setCreditCards(getCreditCards());
+    // 2. Calculate Credit Cards Usage
+    const cardsUsage = useMemo(() => {
+        return cards.map(card => {
+            const used = card.expenses?.reduce((acc, curr) => acc + Number(curr.amount), 0) || 0;
+            return {
+                id: card.id,
+                name: card.name,
+                limit: card.limit,
+                used,
+                color: 'bg-purple-600' // Default color
+            };
+        });
+    }, [cards]);
 
-        // Dados anuais (estáticos no mock)
-        setYearlyData(getYearlyStats());
-    }, [selectedMonth]);
+    // 3. Calculate Category Stats
+    const categoryStats = useMemo(() => {
+        const monthlyExpenses = expenses.filter(e => {
+            const date = new Date(e.date);
+            return date.getMonth() === selectedMonth;
+        });
+
+        const groups = monthlyExpenses.reduce((acc, exp) => {
+            const cat = exp.category || 'Outros';
+            if (!acc[cat]) acc[cat] = 0;
+            acc[cat] += Number(exp.amount);
+            return acc;
+        }, {} as Record<string, number>);
+
+        const iconMap: any = {
+            'Alimentação': { icon: Utensils, color: 'bg-orange-500' },
+            'Moradia': { icon: Home, color: 'bg-blue-500' },
+            'Transporte': { icon: Car, color: 'bg-emerald-500' },
+            'Educação': { icon: Globe, color: 'bg-purple-500' },
+            'Lazer': { icon: ShoppingBag, color: 'bg-pink-500' },
+            'Café': { icon: Coffee, color: 'bg-amber-600' },
+            'Outros': { icon: MoreHorizontal, color: 'bg-slate-500' }
+        };
+
+        const totalMonthExpense = monthlyExpenses.reduce((acc, curr) => acc + Number(curr.amount), 0);
+
+        return Object.entries(groups).map(([name, amount]) => ({
+            name,
+            amount,
+            icon: iconMap[name]?.icon || MoreHorizontal,
+            color: iconMap[name]?.color || 'bg-slate-500',
+            percentage: totalMonthExpense > 0 ? (amount / totalMonthExpense) * 100 : 0
+        })).sort((a, b) => b.amount - a.amount);
+    }, [expenses, selectedMonth]);
 
     const calculatePercentage = (current: number, target: number) => {
         if (target <= 0) return 0;
         return Math.min(Math.round((current / target) * 100), 100);
     };
 
-    const nextLesson = getNextLesson();
+    const formatBRL = (val: number) => {
+        return val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    };
 
     return (
         <div className="p-6 pb-24 md:pb-6 max-w-7xl mx-auto space-y-8 animate-fade-in">
             {/* Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+                    <h1 className="text-3xl font-bold text-textMain">
                         Olá, {user?.user_metadata?.name || 'Investidor'}
                     </h1>
-                    <p className="text-gray-400">Aqui está o resumo das suas finanças</p>
+                    <p className="text-textSecondary">Aqui está o resumo das suas finanças</p>
                 </div>
 
-                <MonthSelector
-                    onDateChange={(date: Date) => setSelectedMonth(date.getMonth())}
-                />
+                <div className="flex items-center gap-4">
+                    {/* Month Selector from FinanceProvider state */}
+                    <MonthSelector
+                        onDateChange={(date: Date) => setSelectedMonth(date.getMonth())}
+                    />
+                </div>
             </div>
 
             {/* Cards de Resumo */}
             <SummaryCards
-                income={income}
-                expense={expense}
-                goals={goals}
-                creditCards={creditCards}
+                income={summary.income}
+                expense={summary.expense}
+                goals={financialGoals.map(g => ({
+                    id: g.id,
+                    name: g.title,
+                    current: g.current_amount,
+                    target: g.target_amount,
+                    color: 'bg-green-500'
+                }))}
+                creditCards={cardsUsage}
                 calculatePercentage={calculatePercentage}
             />
 
-            {/* Gráfico Anual + Educação */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Gráfico (Ocupa 2 colunas) */}
-                <div className="lg:col-span-2 bg-gray-900 border border-gray-800 rounded-2xl p-6 shadow-xl">
-                    <h2 className="text-xl font-semibold text-white mb-6">Fluxo de Caixa Anual</h2>
-                    <div className="h-[300px] w-full">
-                        <YearlyChart data={yearlyData} />
-                    </div>
+            {/* Main Content Grid */}
+            <div className="w-full space-y-8">
+                {/* Annual Chart */}
+                <div className="w-full">
+                    <YearlyChart
+                        yearlyData={yearlyStats}
+                        cards={cards.map(c => ({ id: String(c.id), name: c.name }))}
+                    />
                 </div>
 
-                {/* Educação (Ocupa 1 coluna) */}
-                <div className="space-y-6">
-                    <EducationStats stats={educationHubStats} variant="full" />
+                {/* Categories (Restored) */}
+                <div className="bg-surfaceCard border border-border/50 rounded-2xl p-6 shadow-xl">
+                    <h3 className="text-xl font-semibold text-textMain mb-6">Gastos por Categoria</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {categoryStats.map((cat, idx) => (
+                            <div key={idx} className="flex items-center gap-4 p-4 rounded-xl bg-background border border-border/30">
+                                <div className={`p-3 rounded-lg ${cat.color} bg-opacity-20 text-white`}>
+                                    <cat.icon size={20} className={cat.color.replace('bg-', 'text-')} />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex justify-between mb-1.5">
+                                        <span className="text-sm font-bold text-textMain truncate">{cat.name}</span>
+                                        <span className="text-sm font-black text-textMain">{formatBRL(cat.amount)}</span>
+                                    </div>
+                                    <div className="w-full bg-border rounded-full h-1.5 overflow-hidden">
+                                        <div
+                                            className={`${cat.color} h-full rounded-full transition-all duration-700`}
+                                            style={{ width: `${cat.percentage}%` }}
+                                        ></div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                        {categoryStats.length === 0 && (
+                            <div className="col-span-full py-10 flex flex-col items-center justify-center text-center text-textSecondary opacity-80 border-2 border-dashed border-border/50 rounded-2xl">
+                                <MoreHorizontal className="mb-2 text-textSecondary/50" size={32} />
+                                Nenhuma despesa registrada neste mês.
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

@@ -24,7 +24,7 @@ export default function YearlyChart({ yearlyData, cards }: YearlyChartProps) {
         <div className="bg-surfaceCard p-6 rounded-2xl border border-border/50 mb-8">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
                 <div>
-                    <h3 className="text-xl font-bold text-white">{t('chart.title')}</h3>
+                    <h3 className="text-xl font-bold text-textMain">{t('chart.title')}</h3>
                     <p className="text-textSecondary text-sm mt-1">
                         {chartView === 'expense' ? t('chart.viewExpense') : t('chart.viewProfit')}
                     </p>
@@ -33,14 +33,14 @@ export default function YearlyChart({ yearlyData, cards }: YearlyChartProps) {
                 <div className="flex bg-background p-1 rounded-xl border border-border/30 mt-4 md:mt-0">
                     <button
                         onClick={() => setChartView('expense')}
-                        className={`px-4 py-1.5 rounded-lg text-sm font-bold transition-all ${chartView === 'expense' ? 'bg-primary text-white shadow-lg' : 'text-textSecondary hover:text-white'
+                        className={`px-4 py-1.5 rounded-lg text-sm font-bold transition-all ${chartView === 'expense' ? 'bg-primary text-white shadow-lg' : 'text-textSecondary hover:text-textMain'
                             }`}
                     >
                         {t('chart.toggleExpense')}
                     </button>
                     <button
                         onClick={() => setChartView('profit')}
-                        className={`px-4 py-1.5 rounded-lg text-sm font-bold transition-all ${chartView === 'profit' ? 'bg-emerald-500 text-white shadow-lg' : 'text-textSecondary hover:text-white'
+                        className={`px-4 py-1.5 rounded-lg text-sm font-bold transition-all ${chartView === 'profit' ? 'bg-emerald-500 text-white shadow-lg' : 'text-textSecondary hover:text-textMain'
                             }`}
                     >
                         {t('chart.toggleProfit')}

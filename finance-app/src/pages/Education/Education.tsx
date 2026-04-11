@@ -24,7 +24,7 @@ const Education: React.FC = () => {
     };
 
     return (
-        <div className="education-page min-h-screen bg-gray-900">
+        <div className="education-page min-h-screen bg-background">
             <AchievementsModal isOpen={showAchievements} onClose={() => setShowAchievements(false)} />
 
             {newUnlocks.length > 0 && (
@@ -44,7 +44,7 @@ const Education: React.FC = () => {
                 <div className="mb-8">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
                         <div>
-                            <h1 className="text-3xl font-bold text-white">{t('page.title')}</h1>
+                            <h1 className="text-3xl font-bold text-textMain">{t('page.title')}</h1>
                             <button
                                 onClick={() => setShowAchievements(true)}
                                 className="flex items-center gap-2 px-4 py-2 bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 rounded-lg transition-colors mt-2"
@@ -58,14 +58,14 @@ const Education: React.FC = () => {
                 </div>
 
                 {/* Tabs */}
-                <div className="flex gap-4 mb-8 border-b border-gray-700 overflow-x-auto">
+                <div className="flex gap-4 mb-8 border-b border-border overflow-x-auto">
                     <button
                         onClick={() => setActiveTab('overview')}
                         className={`
               flex items-center gap-2 px-6 py-3 font-medium transition-colors border-b-2 whitespace-nowrap
               ${activeTab === 'overview'
                                 ? 'border-purple-500 text-purple-400'
-                                : 'border-transparent text-gray-400 hover:text-gray-300'}
+                                : 'border-transparent text-textSecondary hover:text-textMain'}
             `}
                     >
                         <Home className="w-5 h-5" />
@@ -77,7 +77,7 @@ const Education: React.FC = () => {
               flex items-center gap-2 px-6 py-3 font-medium transition-colors border-b-2 whitespace-nowrap
               ${activeTab === 'tree'
                                 ? 'border-emerald-500 text-emerald-400'
-                                : 'border-transparent text-gray-400 hover:text-gray-300'}
+                                : 'border-transparent text-textSecondary hover:text-textMain'}
             `}
                     >
                         <TreePine className="w-5 h-5" />
@@ -89,7 +89,7 @@ const Education: React.FC = () => {
               flex items-center gap-2 px-6 py-3 font-medium transition-colors border-b-2 whitespace-nowrap
               ${activeTab === 'library'
                                 ? 'border-blue-500 text-blue-400'
-                                : 'border-transparent text-gray-400 hover:text-gray-300'}
+                                : 'border-transparent text-textSecondary hover:text-textMain'}
             `}
                     >
                         <BookOpen className="w-5 h-5" />

@@ -111,7 +111,7 @@ export function useEducationStats(): EducationStats {
                     .eq('user_id', user.id)
                     .order('updated_at', { ascending: false })
                     .limit(1)
-                    .single();
+                    .maybeSingle();
 
                 const { data: readingProgress } = await supabase
                     .from('user_reading_progress')
@@ -119,7 +119,7 @@ export function useEducationStats(): EducationStats {
                     .eq('user_id', user.id)
                     .order('last_read_at', { ascending: false })
                     .limit(1)
-                    .single();
+                    .maybeSingle();
 
                 const treeDate = treeProgress?.updated_at ? new Date(treeProgress.updated_at) : null;
                 const libraryDate = readingProgress?.last_read_at ? new Date(readingProgress.last_read_at) : null;

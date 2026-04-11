@@ -23,15 +23,15 @@ export function useShoppingLists(userId: string | undefined) {
     const [error, setError] = useState<string | null>(null);
 
     // Fetch all lists with items
-    const fetchLists = async () => {
+    const fetchLists = async (isBackground = false) => {
         if (!userId) {
             setLists([]);
-            setLoading(false);
+            if (!isBackground) setLoading(false);
             return;
         }
 
         try {
-            setLoading(true);
+            if (!isBackground) setLoading(true);
             setError(null);
 
             // Fetch lists
@@ -50,7 +50,8 @@ export function useShoppingLists(userId: string | undefined) {
                         .from('shopping_items')
                         .select('*')
                         .eq('list_id', list.id)
-                        .order('category', { ascending: true });
+                        .order('category', { ascending: true })
+                        .order('order_index', { ascending: true });
 
                     if (itemsError) {
                         logger.finance('Error fetching items:', itemsError);
@@ -68,7 +69,7 @@ export function useShoppingLists(userId: string | undefined) {
             setError(message);
             logger.finance('Error fetching shopping lists:', err);
         } finally {
-            setLoading(false);
+            if (!isBackground) setLoading(false);
         }
     };
 
@@ -92,7 +93,7 @@ export function useShoppingLists(userId: string | undefined) {
             if (error) throw error;
 
             logger.finance('Shopping list created:', data.name);
-            await fetchLists();
+            await fetchLists(true);
             return data;
         } catch (err) {
             logger.finance('Error creating list:', err);
@@ -111,7 +112,7 @@ export function useShoppingLists(userId: string | undefined) {
             if (error) throw error;
 
             logger.finance('Shopping list updated');
-            await fetchLists();
+            await fetchLists(true);
             return true;
         } catch (err) {
             logger.finance('Error updating list:', err);
@@ -130,7 +131,7 @@ export function useShoppingLists(userId: string | undefined) {
             if (error) throw error;
 
             logger.finance('Shopping list deleted');
-            await fetchLists();
+            await fetchLists(true);
             return true;
         } catch (err) {
             logger.finance('Error deleting list:', err);
@@ -150,7 +151,7 @@ export function useShoppingLists(userId: string | undefined) {
             if (error) throw error;
 
             logger.finance('Item added to list:', data.name);
-            await fetchLists();
+            await fetchLists(true);
             return data;
         } catch (err) {
             logger.finance('Error adding item:', err);
@@ -169,7 +170,7 @@ export function useShoppingLists(userId: string | undefined) {
             if (error) throw error;
 
             logger.finance('Item updated');
-            await fetchLists();
+            await fetchLists(true);
             return true;
         } catch (err) {
             logger.finance('Error updating item:', err);
@@ -188,10 +189,31 @@ export function useShoppingLists(userId: string | undefined) {
             if (error) throw error;
 
             logger.finance('Item deleted');
-            await fetchLists();
+            await fetchLists(true);
             return true;
         } catch (err) {
             logger.finance('Error deleting item:', err);
+            return false;
+        }
+    };
+
+    // Bulk reorder items
+    const reorderItems = async (itemsToUpdate: { id: string; order_index: number; category: string }[]): Promise<boolean> => {
+        try {
+            // Because Supabase 'upsert' works best if we provide the full row or if we just issue multiple single updates,
+            // we'll run multiple updates in parallel for small list sizes to ensure RLS compliance.
+            await Promise.all(itemsToUpdate.map(async (item) => {
+                await supabase
+                    .from('shopping_items')
+                    .update({ order_index: item.order_index, category: item.category })
+                    .eq('id', item.id);
+            }));
+
+            logger.finance('Items reordered successfully');
+            await fetchLists(true);
+            return true;
+        } catch (err) {
+            logger.finance('Error reordering items:', err);
             return false;
         }
     };
@@ -242,6 +264,7 @@ export function useShoppingLists(userId: string | undefined) {
         addItem,
         updateItem,
         deleteItem,
+        reorderItems,
         toggleItemPurchased,
         getStats,
         getActiveList,

@@ -1,6 +1,7 @@
-import { LayoutDashboard, Wallet, PieChart, Crosshair, GraduationCap, Calculator, Shield, ShoppingCart, Heart, LogOut, X } from 'lucide-react';
+import { LayoutDashboard, Wallet, PieChart, Crosshair, GraduationCap, Calculator, Shield, ShoppingCart, LogOut, X } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useEducationStats } from '../hooks/useEducationStats';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -10,6 +11,7 @@ interface SidebarProps {
 export default function Sidebar({ isOpen, onClose }: SidebarProps): JSX.Element {
   const { logout } = useAuth();
   const location = useLocation();
+  const educationStats = useEducationStats();
 
   const isActive = (path: string): boolean => {
     if (path === '/') return location.pathname === '/' || location.pathname === '/dashboard';
@@ -65,30 +67,27 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps): JSX.Element 
               key={index}
               to={item.path}
               onClick={handleNavClick}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 group
+              className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group
                 ${item.active
                   ? 'bg-primary/10 text-primary'
                   : 'text-textSecondary hover:bg-surfaceCard hover:text-textMain'
                 }`}
             >
-              <item.icon size={22} className={item.active ? 'text-primary' : 'text-textSecondary group-hover:text-textMain'} />
-              <span className="font-medium text-sm">{item.label}</span>
+              <div className="flex items-center space-x-3">
+                <item.icon size={22} className={item.active ? 'text-primary' : 'text-textSecondary group-hover:text-textMain'} />
+                <span className="font-medium text-sm">{item.label}</span>
+              </div>
+              {item.path === '/education' && (
+                <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${item.active ? 'bg-primary text-white' : 'bg-primary/10 text-primary group-hover:bg-primary/20'}`}>
+                  {educationStats.overall.overallProgress}%
+                </span>
+              )}
             </Link>
           ))}
         </nav>
 
         {/* Footer Actions */}
         <div className="p-4 mt-auto border-t border-border/30 space-y-2">
-          <a
-            href="https://ko-fi.com/alicedesa"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-textSecondary hover:bg-surfaceCard hover:text-textMain transition-all"
-          >
-            <Heart size={20} />
-            <span className="font-medium text-sm">Ko-fi</span>
-          </a>
-
           <button
             onClick={logout}
             className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-500/10 transition-all"

@@ -6,6 +6,8 @@
 export type ShoppingListStatus = 'planning' | 'shopping' | 'completed';
 
 export type ItemCategory =
+    | 'essenciais'
+    | 'conveniencia'
     | 'frutas'
     | 'verduras'
     | 'carnes'
@@ -36,7 +38,9 @@ export interface ShoppingItem {
     list_id: string;
     name: string;
     category: ItemCategory;
-    quantity: number;
+    quantity: number; // Comprar
+    stock: number; // Estoque
+    order_index: number;
     unit: ItemUnit;
     estimated_price: number;
     actual_price?: number;
@@ -65,6 +69,8 @@ export interface CreateShoppingItemInput {
     name: string;
     category?: ItemCategory;
     quantity?: number;
+    stock?: number;
+    order_index?: number;
     unit?: ItemUnit;
     estimated_price?: number;
     notes?: string;
@@ -74,6 +80,8 @@ export interface UpdateShoppingItemInput {
     name?: string;
     category?: ItemCategory;
     quantity?: number;
+    stock?: number;
+    order_index?: number;
     unit?: ItemUnit;
     estimated_price?: number;
     actual_price?: number;

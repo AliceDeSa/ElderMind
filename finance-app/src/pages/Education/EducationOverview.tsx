@@ -17,10 +17,10 @@ const EducationOverview: React.FC<Props> = ({ onNavigate }) => {
         <div className="space-y-8">
             {/* Welcome Section */}
             <div className="text-center">
-                <h1 className="text-4xl font-bold text-white mb-2">
+                <h1 className="text-4xl font-bold text-textMain mb-2">
                     {t('overview.welcome')}
                 </h1>
-                <p className="text-gray-400 text-lg">
+                <p className="text-textSecondary text-lg">
                     {t('overview.subtitle')}
                 </p>
             </div>
@@ -30,8 +30,8 @@ const EducationOverview: React.FC<Props> = ({ onNavigate }) => {
 
             {/* Continue Learning Section */}
             {recommendation && (
-                <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
-                    <h2 className="text-xl font-semibold text-white mb-4">
+                <div className="bg-surfaceCard rounded-xl p-6 border border-border/50">
+                    <h2 className="text-xl font-semibold text-textMain mb-4">
                         {t('overview.continueLearning')}
                     </h2>
 
@@ -46,10 +46,10 @@ const EducationOverview: React.FC<Props> = ({ onNavigate }) => {
                             </div>
 
                             <div className="flex-1">
-                                <h3 className="text-lg font-semibold text-white mb-1">
+                                <h3 className="text-lg font-semibold text-textMain mb-1">
                                     {recommendation.title}
                                 </h3>
-                                <p className="text-gray-400 mb-4">
+                                <p className="text-textSecondary mb-4">
                                     {recommendation.description}
                                 </p>
 
@@ -84,29 +84,29 @@ const EducationOverview: React.FC<Props> = ({ onNavigate }) => {
                             <TreePine className="w-8 h-8 text-green-400" />
                         </div>
                         <div>
-                            <h3 className="text-xl font-semibold text-white">
+                            <h3 className="text-xl font-semibold text-textMain">
                                 {t('overview.treeCard.title')}
                             </h3>
-                            <p className="text-gray-400 text-sm">
+                            <p className="text-textSecondary text-sm">
                                 {t('overview.treeCard.subtitle')}
                             </p>
                         </div>
                     </div>
 
                     <div className="space-y-2 text-sm">
-                        <div className="flex justify-between text-gray-400">
+                        <div className="flex justify-between text-textSecondary">
                             <span>{t('overview.treeCard.progress')}</span>
-                            <span className="text-white font-medium">
+                            <span className="text-textMain font-medium">
                                 {stats.tree.progressPercentage}%
                             </span>
                         </div>
-                        <div className="w-full bg-gray-700 rounded-full h-2">
+                        <div className="w-full bg-inputBg rounded-full h-2">
                             <div
                                 className="bg-green-400 h-2 rounded-full transition-all duration-500"
                                 style={{ width: `${stats.tree.progressPercentage}%` }}
                             />
                         </div>
-                        <div className="flex justify-between text-gray-400 pt-2">
+                        <div className="flex justify-between text-textSecondary pt-2">
                             <span>{stats.tree.completedNodes} {t('overview.treeCard.completed')}</span>
                             <span>{stats.tree.inProgressNodes} {t('overview.treeCard.inProgress')}</span>
                         </div>
@@ -128,29 +128,29 @@ const EducationOverview: React.FC<Props> = ({ onNavigate }) => {
                             <BookOpen className="w-8 h-8 text-blue-400" />
                         </div>
                         <div>
-                            <h3 className="text-xl font-semibold text-white">
+                            <h3 className="text-xl font-semibold text-textMain">
                                 {t('overview.libraryCard.title')}
                             </h3>
-                            <p className="text-gray-400 text-sm">
+                            <p className="text-textSecondary text-sm">
                                 {t('overview.libraryCard.subtitle')}
                             </p>
                         </div>
                     </div>
 
                     <div className="space-y-2 text-sm">
-                        <div className="flex justify-between text-gray-400">
+                        <div className="flex justify-between text-textSecondary">
                             <span>{t('overview.libraryCard.progress')}</span>
-                            <span className="text-white font-medium">
+                            <span className="text-textMain font-medium">
                                 {stats.library.progressPercentage}%
                             </span>
                         </div>
-                        <div className="w-full bg-gray-700 rounded-full h-2">
+                        <div className="w-full bg-inputBg rounded-full h-2">
                             <div
                                 className="bg-blue-400 h-2 rounded-full transition-all duration-500"
                                 style={{ width: `${stats.library.progressPercentage}%` }}
                             />
                         </div>
-                        <div className="flex justify-between text-gray-400 pt-2">
+                        <div className="flex justify-between text-textSecondary pt-2">
                             <span>{stats.library.excerptsRead} {t('overview.libraryCard.read')}</span>
                             <span>{stats.library.booksStarted} {t('overview.libraryCard.started')}</span>
                         </div>
@@ -166,7 +166,7 @@ const EducationOverview: React.FC<Props> = ({ onNavigate }) => {
             {/* Motivational Message */}
             {stats.overall.overallProgress > 0 && (
                 <div className="bg-gradient-to-r from-purple-900/20 to-blue-900/20 rounded-xl p-6 border border-purple-500/20 text-center">
-                    <p className="text-gray-300 text-lg">
+                    <p className="text-textMain text-lg">
                         {getMotivationalMessage(stats.overall.overallProgress, t)}
                     </p>
                 </div>
