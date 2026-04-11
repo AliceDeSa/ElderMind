@@ -19,6 +19,8 @@ export default function ExpensesTab() {
         cards,
         setCards,
         addCard,
+        updateCard,
+        deleteCard,
         addExpense,
         updateExpense,
         deleteExpense
@@ -26,7 +28,13 @@ export default function ExpensesTab() {
 
     const [currentDate, setCurrentDate] = useState(new Date());
     const [expandedCards, setExpandedCards] = useState<string[]>([]);
-    const [showAddCard, setShowAddCard] = useState(false);
+    
+    // Card Modal States
+    const [cardModal, setCardModal] = useState({
+        open: false,
+        editMode: false,
+        cardId: null as string | null
+    });
     const [cardFormData, setCardFormData] = useState({ name: '', limit: '', dueDate: '' });
 
     // Expense Modal States
@@ -52,11 +60,34 @@ export default function ExpensesTab() {
         );
     };
 
-    const handleAddCard = async (e: React.FormEvent) => {
-        e.preventDefault();
-        await addCard(cardFormData);
+    const handleOpenAddCard = () => {
         setCardFormData({ name: '', limit: '', dueDate: '' });
-        setShowAddCard(false);
+        setCardModal({ open: true, editMode: false, cardId: null });
+    };
+
+    const handleOpenEditCard = (card: any) => {
+        setCardFormData({
+            name: card.name,
+            limit: card.limit.toString(),
+            dueDate: card.dueDate.toString()
+        });
+        setCardModal({ open: true, editMode: true, cardId: card.id });
+    };
+
+    const handleSaveCard = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (cardModal.editMode && cardModal.cardId) {
+            await updateCard(cardModal.cardId, cardFormData);
+        } else {
+            await addCard(cardFormData);
+        }
+        setCardModal({ open: false, editMode: false, cardId: null });
+    };
+
+    const handleDeleteCard = async (cardId: string) => {
+        if (window.confirm('Deseja realmente excluir este cartão? Isso apagará TODAS as despesas lançadas nele de forma permanente.')) {
+            await deleteCard(cardId);
+        }
     };
 
     const onDragEnd = (result: DropResult) => {
@@ -118,7 +149,7 @@ export default function ExpensesTab() {
     };
 
     const handleDeleteExpense = async (cardId: string, expenseId: string) => {
-        if (confirm('Deseja realmente excluir esta despesa?')) {
+        if (window.confirm('Deseja realmente excluir esta despesa?')) {
             await deleteExpense(cardId, expenseId);
         }
     };
@@ -135,7 +166,7 @@ export default function ExpensesTab() {
                 <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
                     <MonthSelector onDateChange={setCurrentDate} />
 
-                    <Button onClick={() => setShowAddCard(true)} className="!w-auto px-4 py-2 text-sm">
+                    <Button onClick={handleOpenAddCard} className="!w-auto px-4 py-2 text-sm">
                         <Plus size={16} className="mr-2" /> Novo Cartão
                     </Button>
                 </div>
@@ -154,6 +185,8 @@ export default function ExpensesTab() {
                             onAddExpense={() => openAddExpense(card.id)}
                             onEditExpense={(expense) => openEditExpense(card.id, expense)}
                             onDeleteExpense={(expenseId) => handleDeleteExpense(card.id, expenseId)}
+                            onEditCard={() => handleOpenEditCard(card)}
+                            onDeleteCard={() => handleDeleteCard(card.id)}
                         />
                     ))}
                 </div>
@@ -171,10 +204,11 @@ export default function ExpensesTab() {
             />
 
             <AddCardModal
-                isOpen={showAddCard}
+                isOpen={cardModal.open}
+                isEditMode={cardModal.editMode}
                 formData={cardFormData}
-                onClose={() => setShowAddCard(false)}
-                onSubmit={handleAddCard}
+                onClose={() => setCardModal({ ...cardModal, open: false })}
+                onSubmit={handleSaveCard}
                 onFormChange={(field, value) => setCardFormData({ ...cardFormData, [field]: value })}
             />
         </div>

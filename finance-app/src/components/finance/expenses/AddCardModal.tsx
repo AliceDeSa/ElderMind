@@ -8,6 +8,7 @@ import Input from '../../Input';
 
 interface AddCardModalProps {
     isOpen: boolean;
+    isEditMode?: boolean;
     formData: {
         name: string;
         limit: string;
@@ -20,6 +21,7 @@ interface AddCardModalProps {
 
 export default function AddCardModal({
     isOpen,
+    isEditMode = false,
     formData,
     onClose,
     onSubmit,
@@ -33,7 +35,9 @@ export default function AddCardModal({
                 <button onClick={onClose} className="absolute top-4 right-4 text-textSecondary hover:text-white">
                     <X size={20} />
                 </button>
-                <h3 className="text-xl font-bold text-white mb-6">Novo Cartão</h3>
+                <h3 className="text-xl font-bold text-white mb-6">
+                    {isEditMode ? 'Editar Cartão' : 'Novo Cartão'}
+                </h3>
                 <form onSubmit={onSubmit} className="space-y-4">
                     <Input
                         label="Nome do Cartão"
@@ -62,7 +66,9 @@ export default function AddCardModal({
                     </div>
                     <div className="flex justify-end gap-3 pt-4">
                         <button type="button" onClick={onClose} className="px-4 py-2 text-textSecondary hover:text-white">Cancelar</button>
-                        <Button type="submit" className="!w-auto px-6">Criar Cartão</Button>
+                        <Button type="submit" className="!w-auto px-6">
+                            {isEditMode ? 'Mudar' : 'Criar Cartão'}
+                        </Button>
                     </div>
                 </form>
             </div>

@@ -13,6 +13,8 @@ interface UseCardsReturn {
     cards: Card[];
     expenses: Expense[];
     addCard: (card: Partial<Card>) => Promise<void>;
+    updateCard: (id: string, card: Partial<Card>) => Promise<void>;
+    deleteCard: (id: string) => Promise<void>;
     setCards: (cards: Card[]) => void;
     fetchCards: () => Promise<void>;
 }
@@ -100,6 +102,62 @@ export function useCards(userId: string | undefined): UseCardsReturn {
         }
     };
 
+    const updateCard = async (id: string, card: Partial<Card>): Promise<void> => {
+        if (!userId) return;
+
+        const payload: any = {};
+        if (card.name) payload.name = card.name;
+        if (card.limit) payload.limit_val = Number(card.limit);
+        if (card.dueDate) payload.due_date = card.dueDate;
+
+        try {
+            Logger.finance('Atualizando cartão', { id, payload });
+            const { data, error } = await supabase
+                .from('cards')
+                .update(payload)
+                .eq('id', id)
+                .select();
+
+            if (error) throw error;
+
+            if (data && data.length > 0) {
+                setCards(prev => prev.map(c => {
+                    if (c.id === id) {
+                        return {
+                            ...c,
+                            name: data[0].name,
+                            limit: Number(data[0].limit_val),
+                            dueDate: data[0].due_date
+                        };
+                    }
+                    return c;
+                }));
+                Logger.finance('Cartão atualizado com sucesso', id);
+            }
+        } catch (error) {
+            Logger.finance('Erro ao atualizar cartão', error);
+        }
+    };
+
+    const deleteCard = async (id: string): Promise<void> => {
+        if (!userId) return;
+
+        try {
+            Logger.finance('Excluindo cartão', id);
+            const { error } = await supabase
+                .from('cards')
+                .delete()
+                .eq('id', id);
+
+            if (error) throw error;
+
+            setCards(prev => prev.filter(c => c.id !== id));
+            Logger.finance('Cartão excluído com sucesso', id);
+        } catch (error) {
+            Logger.finance('Erro ao excluir cartão', error);
+        }
+    };
+
     // Flatten expenses from all cards
     const expenses = cards.flatMap(c => c.expenses || []);
 
@@ -107,6 +165,8 @@ export function useCards(userId: string | undefined): UseCardsReturn {
         cards,
         expenses,
         addCard,
+        updateCard,
+        deleteCard,
         setCards,
         fetchCards
     };

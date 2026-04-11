@@ -35,6 +35,8 @@ interface FinanceContextValue {
 
     // Card actions
     addCard: (card: Partial<Card>) => Promise<void>;
+    updateCard: (id: string, card: Partial<Card>) => Promise<void>;
+    deleteCard: (id: string) => Promise<void>;
     setCards: (cards: Card[]) => void;
 
     // Expense actions
@@ -189,6 +191,8 @@ export function FinanceProvider({ children }: FinanceProviderProps): JSX.Element
 
         // Card actions
         addCard: cardsHook.addCard,
+        updateCard: cardsHook.updateCard,
+        deleteCard: cardsHook.deleteCard,
         setCards: cardsHook.setCards,
 
         // Expense actions

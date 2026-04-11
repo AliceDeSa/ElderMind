@@ -3,7 +3,7 @@
  */
 
 import { Droppable } from '@hello-pangea/dnd';
-import { CreditCard, Plus, ChevronDown, ChevronUp } from 'lucide-react';
+import { CreditCard, Plus, ChevronDown, ChevronUp, Pencil, Trash2 } from 'lucide-react';
 import ExpenseItem from './ExpenseItem';
 
 interface Expense {
@@ -38,6 +38,8 @@ interface ExpenseCardProps {
     onAddExpense: () => void;
     onEditExpense: (expense: Expense) => void;
     onDeleteExpense: (expenseId: string) => void;
+    onEditCard: () => void;
+    onDeleteCard: () => void;
 }
 
 export default function ExpenseCard({
@@ -47,7 +49,9 @@ export default function ExpenseCard({
     onToggleExpand,
     onAddExpense,
     onEditExpense,
-    onDeleteExpense
+    onDeleteExpense,
+    onEditCard,
+    onDeleteCard
 }: ExpenseCardProps) {
     const totalUsed = card.expenses.reduce((acc, curr) => acc + curr.amount, 0);
     const available = card.limit - totalUsed;
@@ -66,28 +70,38 @@ export default function ExpenseCard({
             {/* Card Header */}
             <div
                 onClick={onToggleExpand}
-                className="p-6 flex flex-col md:flex-row justify-between items-center cursor-pointer gap-4"
+                className="p-6 flex flex-col md:flex-row justify-between items-center cursor-pointer gap-4 group"
             >
-                <div className="flex items-center gap-4 w-full md:w-auto">
+                <div className="flex items-center gap-4 w-full md:w-auto hover:bg-transparent">
                     <div className={`p-3 rounded-xl ${style.bg} ${style.color}`}>
                         <CreditCard size={24} />
                     </div>
                     <div>
-                        <h3 className="text-lg font-bold text-white">{card.name}</h3>
+                        <div className="flex items-center gap-3">
+                            <h3 className="text-lg font-bold text-white max-w-[150px] truncate">{card.name}</h3>
+                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button onClick={(e) => { e.stopPropagation(); onEditCard(); }} className="text-textSecondary hover:text-white p-1 rounded transition-colors" title="Editar Cartão">
+                                    <Pencil size={14} />
+                                </button>
+                                <button onClick={(e) => { e.stopPropagation(); onDeleteCard(); }} className="text-textSecondary hover:text-red-400 p-1 rounded transition-colors" title="Excluir Cartão">
+                                    <Trash2 size={14} />
+                                </button>
+                            </div>
+                        </div>
                         <div className="flex items-center gap-2 text-xs">
-                            <span className="text-textSecondary">Vence dia {card.dueDate}</span>
-                            <span className="w-1 h-1 rounded-full bg-textSecondary"></span>
-                            <span className="text-emerald-500 font-medium">Disponível: R$ {available.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                            <span className="text-textSecondary whitespace-nowrap">Vence dia {card.dueDate}</span>
+                            <span className="w-1 h-1 rounded-full bg-textSecondary flex-shrink-0"></span>
+                            <span className="text-emerald-500 font-medium whitespace-nowrap">Disponível: R$ {available.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                         </div>
                     </div>
                 </div>
 
-                <div className="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end">
+                <div className="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end flex-shrink-0">
                     <div className="text-right">
                         <p className="text-xs text-textSecondary">Fatura Atual</p>
                         <p className="text-xl font-bold text-white">R$ {totalUsed.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
                     </div>
-                    {isExpanded ? <ChevronUp className="text-textSecondary" /> : <ChevronDown className="text-textSecondary" />}
+                    {isExpanded ? <ChevronUp className="text-textSecondary flex-shrink-0" /> : <ChevronDown className="text-textSecondary flex-shrink-0" />}
                 </div>
             </div>
 
