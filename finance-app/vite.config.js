@@ -72,7 +72,7 @@ export default defineConfig({
       }
     })
   ],
-  base: '/ElderMind/',
+  base: '/',
   server: {
     host: true
   }
