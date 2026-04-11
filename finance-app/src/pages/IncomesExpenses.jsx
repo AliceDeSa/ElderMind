@@ -2,13 +2,15 @@ import { useState } from 'react';
 import IncomeTab from '../components/finance/IncomeTab';
 import ExpensesTab from '../components/finance/expenses/ExpensesTab';
 import AnalysisTab from '../components/finance/AnalysisTab';
+import { useTranslation } from 'react-i18next';
 
 export default function IncomesExpenses() {
+    const { t } = useTranslation(['finance', 'common']);
     const [activeTab, setActiveTab] = useState('rendas'); // rendas, despesas, analise
 
     return (
         <div className="text-textMain pb-10">
-            <h1 className="text-3xl font-bold mb-6">Rendas e Gastos</h1>
+            <h1 className="text-3xl font-bold mb-6">{t('common:menu.finances')}</h1>
 
             {/* Modern Tabs */}
             <div className="flex space-x-1 bg-surfaceCard p-1 rounded-xl w-fit mb-8 border border-border/50">
@@ -16,19 +18,19 @@ export default function IncomesExpenses() {
                     onClick={() => setActiveTab('rendas')}
                     className={`px-6 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === 'rendas' ? 'bg-primary text-white shadow-lg' : 'text-textSecondary hover:text-white hover:bg-white/5'}`}
                 >
-                    Rendas
+                    {t('finance:income.title', 'Rendas')}
                 </button>
                 <button
                     onClick={() => setActiveTab('despesas')}
                     className={`px-6 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === 'despesas' ? 'bg-primary text-white shadow-lg' : 'text-textSecondary hover:text-white hover:bg-white/5'}`}
                 >
-                    Despesas
+                    {t('finance:expenses.title', 'Despesas')}
                 </button>
                 <button
                     onClick={() => setActiveTab('analise')}
                     className={`px-6 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === 'analise' ? 'bg-primary text-white shadow-lg' : 'text-textSecondary hover:text-white hover:bg-white/5'}`}
                 >
-                    Análise
+                    {t('finance:analysis.title', 'Análise')}
                 </button>
             </div>
 

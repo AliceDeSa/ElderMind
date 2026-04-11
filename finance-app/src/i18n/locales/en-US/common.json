@@ -49,5 +49,21 @@
         "success": "Operation completed successfully",
         "confirmDelete": "Are you sure you want to delete?",
         "noData": "No data available"
+    },
+    "actions": {
+        "create": "Create",
+        "cancel": "Cancel",
+        "back": "Back"
+    },
+    "menu": {
+        "dashboard": "Dashboard",
+        "finances": "Incomes & Expenses",
+        "goals": "Budgets",
+        "objectives": "Objectives",
+        "education": "Education",
+        "calculator": "Calculator",
+        "grocery": "Grocery List",
+        "emergency": "Emergency Fund",
+        "logout": "Logout"
     }
 }

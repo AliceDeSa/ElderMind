@@ -12,8 +12,10 @@ import { Plus } from 'lucide-react';
 import ExpenseCard from './ExpenseCard';
 import ExpenseModal from './ExpenseModal';
 import AddCardModal from './AddCardModal';
+import { useTranslation } from 'react-i18next';
 
 export default function ExpensesTab() {
+    const { t } = useTranslation(['finance', 'common']);
     const {
         budgetAllocation,
         cards,
@@ -85,7 +87,7 @@ export default function ExpensesTab() {
     };
 
     const handleDeleteCard = async (cardId: string) => {
-        if (window.confirm('Deseja realmente excluir este cartão? Isso apagará TODAS as despesas lançadas nele de forma permanente.')) {
+        if (window.confirm(t('common:messages.confirmDelete') + " (Apagará todas as despesas vinculadas permanentemente)")) {
             await deleteCard(cardId);
         }
     };
@@ -149,7 +151,7 @@ export default function ExpensesTab() {
     };
 
     const handleDeleteExpense = async (cardId: string, expenseId: string) => {
-        if (window.confirm('Deseja realmente excluir esta despesa?')) {
+        if (window.confirm(t('common:messages.confirmDelete'))) {
             await deleteExpense(cardId, expenseId);
         }
     };
@@ -159,15 +161,15 @@ export default function ExpensesTab() {
             {/* Header Actions */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h2 className="text-xl font-bold text-white">Carteira de Despesas</h2>
-                    <p className="text-textSecondary text-sm">Arraste os itens entre cartões para organizar</p>
+                    <h2 className="text-xl font-bold text-white">{t('finance:expenses.title')}</h2>
+                    <p className="text-textSecondary text-sm">{t('finance:expenses.subtitle')}</p>
                 </div>
 
                 <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
                     <MonthSelector onDateChange={setCurrentDate} />
 
                     <Button onClick={handleOpenAddCard} className="!w-auto px-4 py-2 text-sm">
-                        <Plus size={16} className="mr-2" /> Novo Cartão
+                        <Plus size={16} className="mr-2" /> {t('finance:expenses.addCard')}
                     </Button>
                 </div>
             </div>

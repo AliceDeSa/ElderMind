@@ -2,6 +2,7 @@ import { LayoutDashboard, Wallet, PieChart, Crosshair, GraduationCap, Calculator
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useEducationStats } from '../hooks/useEducationStats';
+import { useTranslation } from 'react-i18next';
 import LanguageSelector from './LanguageSelector';
 
 interface SidebarProps {
@@ -10,6 +11,7 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps): JSX.Element {
+  const { t } = useTranslation('common');
   const { logout } = useAuth();
   const location = useLocation();
   const educationStats = useEducationStats();
@@ -24,14 +26,14 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps): JSX.Element 
   };
 
   const menuItems = [
-    { icon: LayoutDashboard, label: 'Painel', path: '/', active: isActive('/') },
-    { icon: Wallet, label: 'Rendas e Gastos', path: '/finances', active: isActive('/finances') },
-    { icon: PieChart, label: 'Orçamento', path: '/goals', active: isActive('/goals') },
-    { icon: Crosshair, label: 'Objetivos', path: '/objectives', active: isActive('/objectives') },
-    { icon: GraduationCap, label: 'Educação', path: '/education', active: isActive('/education') },
-    { icon: Calculator, label: 'Calculadora', path: '/calculator', active: isActive('/calculator') },
-    { icon: ShoppingCart, label: 'Lista de Compras', path: '/grocery', active: isActive('/grocery') },
-    { icon: Shield, label: 'Reserva de Emergência', path: '/emergency', active: isActive('/emergency') },
+    { icon: LayoutDashboard, label: t('menu.dashboard'), path: '/', active: isActive('/') },
+    { icon: Wallet, label: t('menu.finances'), path: '/finances', active: isActive('/finances') },
+    { icon: PieChart, label: t('menu.goals'), path: '/goals', active: isActive('/goals') },
+    { icon: Crosshair, label: t('menu.objectives'), path: '/objectives', active: isActive('/objectives') },
+    { icon: GraduationCap, label: t('menu.education'), path: '/education', active: isActive('/education') },
+    { icon: Calculator, label: t('menu.calculator'), path: '/calculator', active: isActive('/calculator') },
+    { icon: ShoppingCart, label: t('menu.grocery'), path: '/grocery', active: isActive('/grocery') },
+    { icon: Shield, label: t('menu.emergency'), path: '/emergency', active: isActive('/emergency') },
   ];
 
   return (
@@ -95,7 +97,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps): JSX.Element 
             className="w-full flex items-center justify-center space-x-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-500/10 transition-all font-bold"
           >
             <LogOut size={20} />
-            <span className="font-medium text-sm">Sair</span>
+            <span className="font-medium text-sm">{t('menu.logout')}</span>
           </button>
         </div>
       </div>

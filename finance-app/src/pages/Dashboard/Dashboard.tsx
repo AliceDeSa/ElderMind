@@ -4,9 +4,11 @@ import { useFinance } from '../../context/FinanceProvider';
 import MonthSelector from '../../components/MonthSelector';
 import SummaryCards from './SummaryCards';
 import YearlyChart from './YearlyChart';
+import { useTranslation } from 'react-i18next';
 import { Utensils, Home, Car, Globe, ShoppingBag, Coffee, MoreHorizontal } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
+    const { t } = useTranslation(['dashboard', 'common']);
     const { user } = useAuth();
     const {
         incomes,
@@ -87,9 +89,9 @@ const Dashboard: React.FC = () => {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <h1 className="text-3xl font-bold text-textMain">
-                        Olá, {user?.user_metadata?.name || 'Investidor'}
+                        {t('dashboard:greeting', { name: user?.user_metadata?.name || 'Investidor' })}
                     </h1>
-                    <p className="text-textSecondary">Aqui está o resumo das suas finanças</p>
+                    <p className="text-textSecondary">{t('dashboard:subtitle')}</p>
                 </div>
 
                 <div className="flex items-center gap-4">
@@ -127,7 +129,7 @@ const Dashboard: React.FC = () => {
 
                 {/* Categories (Restored) */}
                 <div className="bg-surfaceCard border border-border/50 rounded-2xl p-6 shadow-xl">
-                    <h3 className="text-xl font-semibold text-textMain mb-6">Gastos por Categoria</h3>
+                    <h3 className="text-xl font-semibold text-textMain mb-6">{t('dashboard:categories.title')}</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {categoryStats.map((cat, idx) => (
                             <div key={idx} className="flex items-center gap-4 p-4 rounded-xl bg-background border border-border/30">
@@ -151,7 +153,7 @@ const Dashboard: React.FC = () => {
                         {categoryStats.length === 0 && (
                             <div className="col-span-full py-10 flex flex-col items-center justify-center text-center text-textSecondary opacity-80 border-2 border-dashed border-border/50 rounded-2xl">
                                 <MoreHorizontal className="mb-2 text-textSecondary/50" size={32} />
-                                Nenhuma despesa registrada neste mês.
+                                {t('common:messages.noData')}
                             </div>
                         )}
                     </div>

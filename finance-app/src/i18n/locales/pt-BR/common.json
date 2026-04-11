@@ -56,11 +56,14 @@
         "back": "Voltar"
     },
     "menu": {
-        "dashboard": "Dashboard",
-        "finances": "Finanças",
-        "goals": "Metas",
+        "dashboard": "Painel Inicial",
+        "finances": "Rendas e Gastos",
+        "goals": "Orçamento",
+        "objectives": "Objetivos",
         "education": "Educação",
         "calculator": "Calculadora",
-        "grocery": "Lista de Compras"
+        "grocery": "Lista de Compras",
+        "emergency": "Reserva de Emergência",
+        "logout": "Sair"
     }
 }

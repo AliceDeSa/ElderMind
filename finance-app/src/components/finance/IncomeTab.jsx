@@ -4,8 +4,10 @@ import Input from '../Input';
 import MonthSelector from '../MonthSelector';
 import { Plus, Trash2, Repeat, DollarSign, Edit2, X, Check, ChevronDown, ChevronUp } from 'lucide-react';
 import { useFinance } from '../../context/FinanceProvider';
+import { useTranslation } from 'react-i18next';
 
 export default function IncomeTab() {
+    const { t } = useTranslation(['finance', 'common']);
     const {
         incomes,
         addIncome,
@@ -61,7 +63,7 @@ export default function IncomeTab() {
     };
 
     const removeIncome = (id) => {
-        if (confirm('Tem certeza que deseja excluir esta renda?')) {
+        if (confirm(t('common:messages.confirmDelete'))) {
             deleteIncome(id);
         }
     };
@@ -98,14 +100,14 @@ export default function IncomeTab() {
             {/* Actions & Filters */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h2 className="text-xl font-bold text-white">Minhas Rendas</h2>
+                    <h2 className="text-xl font-bold text-white">{t('finance:income.title')}</h2>
                     <p className="text-textSecondary text-sm">Gerencie suas fontes de renda</p>
                 </div>
 
                 <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
                     {!showForm && (
                         <Button onClick={() => setShowForm(true)} className="!w-auto px-4 py-2 text-sm">
-                            <Plus size={16} className="mr-2" /> Nova Renda
+                            <Plus size={16} className="mr-2" /> {t('finance:income.addButton')}
                         </Button>
                     )}
                 </div>
@@ -209,13 +211,13 @@ export default function IncomeTab() {
                                         onClick={(e) => { e.stopPropagation(); handleEditClick(income); }}
                                         className="flex-1 flex items-center justify-center p-2 rounded-lg bg-blue-500/10 text-blue-400 font-medium text-sm hover:bg-blue-500/20 transition-colors"
                                     >
-                                        <Edit2 size={16} className="mr-2" /> Editar
+                                        <Edit2 size={16} className="mr-2" /> {t('common:buttons.edit')}
                                     </button>
                                     <button
                                         onClick={(e) => { e.stopPropagation(); removeIncome(income.id); }}
                                         className="flex-1 flex items-center justify-center p-2 rounded-lg bg-red-500/10 text-red-500 font-medium text-sm hover:bg-red-500/20 transition-colors"
                                     >
-                                        <Trash2 size={16} className="mr-2" /> Excluir
+                                        <Trash2 size={16} className="mr-2" /> {t('common:buttons.delete')}
                                     </button>
                                 </div>
                             )}
