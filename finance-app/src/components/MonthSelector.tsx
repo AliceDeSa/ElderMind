@@ -5,9 +5,10 @@ import { useTranslation } from 'react-i18next';
 interface MonthSelectorProps {
     onDateChange: (date: Date) => void;
     initialDate?: Date;
+    align?: 'left' | 'right';
 }
 
-export default function MonthSelector({ onDateChange, initialDate }: MonthSelectorProps) {
+export default function MonthSelector({ onDateChange, initialDate, align = 'left' }: MonthSelectorProps) {
     const { t } = useTranslation('common');
     const [date, setDate] = useState(initialDate || new Date());
     const [isOpen, setIsOpen] = useState(false);
@@ -43,22 +44,24 @@ export default function MonthSelector({ onDateChange, initialDate }: MonthSelect
     };
 
     return (
-        <div className="relative z-50" ref={dropdownRef}>
+        <div className="relative z-50 w-full sm:w-auto" ref={dropdownRef}>
             {/* Main Badge */}
             <button 
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-2 bg-surfaceCard/80 backdrop-blur-md border border-border/50 hover:border-primary/50 text-white px-4 py-2 rounded-xl transition-all shadow-sm"
+                className="flex items-center gap-2 bg-surfaceCard/80 backdrop-blur-md border border-border/50 hover:border-primary/50 text-white px-4 py-2 rounded-xl transition-all shadow-sm w-full sm:w-auto justify-between sm:justify-start"
             >
-                <Calendar size={18} className="text-primary" />
-                <span className="font-bold text-sm tracking-wide capitalize">
-                    {formatMonthFull(date)} {date.getFullYear()}
-                </span>
+                <div className="flex items-center gap-2">
+                    <Calendar size={18} className="text-primary" />
+                    <span className="font-bold text-sm tracking-wide capitalize">
+                        {formatMonthFull(date)} {date.getFullYear()}
+                    </span>
+                </div>
                 <ChevronDown size={16} className={`text-textSecondary transition-transform ${isOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {/* Dropdown Grid */}
             {isOpen && (
-                <div className="absolute right-0 md:left-0 top-[120%] mt-2 w-[320px] bg-surfaceCard border border-border/50 rounded-2xl p-4 shadow-2xl animate-fade-in">
+                <div className={`absolute ${align === 'right' ? 'right-0' : 'left-0'} top-[120%] mt-2 w-[300px] md:w-[320px] bg-surfaceCard border border-border/50 rounded-2xl p-4 shadow-2xl animate-fade-in`}>
                     <div className="flex justify-between items-center mb-4 pb-2 border-b border-border/30">
                         <span className="text-sm font-bold text-textSecondary uppercase tracking-wider">Selecione o Mês</span>
                         <span className="text-sm font-black text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20">{date.getFullYear()}</span>
