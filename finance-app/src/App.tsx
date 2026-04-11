@@ -23,7 +23,7 @@ Logger.sys('ElderMind Finance App inicializando...');
 function App(): JSX.Element {
   return (
     <AuthProvider>
-      <BrowserRouter basename="/ElderMind">
+      <BrowserRouter>
         <Routes>
           {/* Public Routes */}
           <Route path="/login" element={<Login />} />
