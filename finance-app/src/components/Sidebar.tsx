@@ -2,6 +2,7 @@ import { LayoutDashboard, Wallet, PieChart, Crosshair, GraduationCap, Calculator
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useEducationStats } from '../hooks/useEducationStats';
+import LanguageSelector from './LanguageSelector';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -87,10 +88,11 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps): JSX.Element 
         </nav>
 
         {/* Footer Actions */}
-        <div className="p-4 mt-auto border-t border-border/30 space-y-2">
+        <div className="p-4 mt-auto border-t border-border/30 space-y-4">
+          <LanguageSelector dropdownDirection="up" />
           <button
             onClick={logout}
-            className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-500/10 transition-all"
+            className="w-full flex items-center justify-center space-x-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-500/10 transition-all font-bold"
           >
             <LogOut size={20} />
             <span className="font-medium text-sm">Sair</span>

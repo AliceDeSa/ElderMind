@@ -30,14 +30,6 @@ export default function DashboardLayout({ children }) {
                 {children}
             </main>
 
-            {/* Float Refresh Button - Dev Helper */}
-            <button
-                onClick={() => window.location.reload()}
-                className="fixed bottom-6 right-6 p-4 bg-primary text-white rounded-full shadow-2xl hover:bg-primary/80 transition-all z-50 hover:scale-110 active:scale-95 group"
-                title="Forçar Atualização"
-            >
-                <RefreshCw size={24} className="group-hover:rotate-180 transition-transform duration-500" />
-            </button>
         </div>
     );
 }
