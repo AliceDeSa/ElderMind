@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface MonthSelectorProps {
     onDateChange: (date: Date) => void;
@@ -7,38 +8,61 @@ interface MonthSelectorProps {
 }
 
 export default function MonthSelector({ onDateChange, initialDate }: MonthSelectorProps) {
+    const { t } = useTranslation('common');
     const [date, setDate] = useState(initialDate || new Date());
 
-    const months = [
-        'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+    const monthKeys = [
+        'january', 'february', 'march', 'april', 'may', 'june',
+        'july', 'august', 'september', 'october', 'november', 'december'
     ];
 
     useEffect(() => {
         onDateChange(date);
     }, [date, onDateChange]);
 
-    const prevMonth = () => {
-        setDate(new Date(date.setMonth(date.getMonth() - 1)));
+    const changeDate = (offset: number) => {
+        const newDate = new Date(date);
+        newDate.setMonth(date.getMonth() + offset);
+        setDate(newDate);
     };
 
-    const nextMonth = () => {
-        setDate(new Date(date.setMonth(date.getMonth() + 1)));
-    };
+    const currentMonthIdx = date.getMonth();
+    const prevDate = new Date(date);
+    prevDate.setMonth(currentMonthIdx - 1);
+    const nextDate = new Date(date);
+    nextDate.setMonth(currentMonthIdx + 1);
+
+    const formatMonthShort = (d: Date) => t(`months.${monthKeys[d.getMonth()]}`).substring(0, 3);
+    const formatMonthFull = (d: Date) => t(`months.${monthKeys[d.getMonth()]}`);
 
     return (
-        <div className="flex items-center space-x-2 bg-gray-800 border border-gray-700/50 rounded-lg p-1">
-            <button onClick={prevMonth} className="p-1 hover:bg-white/5 rounded text-gray-400 hover:text-white transition-colors">
-                <ChevronLeft size={18} />
+        <div className="flex items-center justify-between bg-surfaceCard/80 backdrop-blur-md border border-border/50 rounded-2xl p-1 shadow-sm w-full md:w-[320px] select-none">
+            {/* Prev */}
+            <button 
+                onClick={() => changeDate(-1)} 
+                className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-textSecondary/70 hover:bg-white/5 hover:text-white hover:shadow-inner transition-all group flex-1 md:flex-none"
+            >
+                <ChevronLeft size={16} className="group-hover:-translate-x-0.5 transition-transform" />
+                <span className="text-xs font-bold uppercase tracking-wider hidden sm:block delay-75">{formatMonthShort(prevDate)}</span>
             </button>
 
-            <div className="flex items-center space-x-2 px-2 text-sm font-medium text-white min-w-[140px] justify-center">
-                <span>{months[date.getMonth()]}</span>
-                <span className="text-gray-500">{date.getFullYear()}</span>
+            {/* Current */}
+            <div className="flex flex-col items-center justify-center px-4 min-w-[140px] animate-fade-in relative py-1">
+                <span className="text-primary text-sm font-black tracking-tight drop-shadow-sm uppercase">
+                    {formatMonthFull(date)} 
+                </span>
+                <span className="text-[10px] font-bold text-textSecondary bg-white/5 py-0.5 px-2 rounded-full mt-0.5">
+                    {date.getFullYear()}
+                </span>
             </div>
 
-            <button onClick={nextMonth} className="p-1 hover:bg-white/5 rounded text-gray-400 hover:text-white transition-colors">
-                <ChevronRight size={18} />
+            {/* Next */}
+            <button 
+                onClick={() => changeDate(1)} 
+                className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-textSecondary/70 hover:bg-white/5 hover:text-white hover:shadow-inner transition-all group flex-1 md:flex-none"
+            >
+                <span className="text-xs font-bold uppercase tracking-wider hidden sm:block delay-75">{formatMonthShort(nextDate)}</span>
+                <ChevronRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
             </button>
         </div>
     );
