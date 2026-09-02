@@ -162,8 +162,8 @@ export default function ShoppingListCard({
 
             {/* Accordion Expanded Content */}
             {isExpanded && (
-                <div className="mt-6 pt-6 border-t border-border/50 space-y-8 animate-fade-in">
-                    
+                <div className="mt-6 pt-6 border-t border-border/50 space-y-8 animate-fade-in overflow-x-auto pb-4">
+                    <div className="min-w-[500px]">
                     {/* Cabeçalho da Tabela */}
                     <div className="flex items-center gap-2 px-2 pb-2 text-xs font-bold text-textSecondary uppercase tracking-wider mx-8">
                         <div className="flex-[2] min-w-[120px]">Nome</div>
@@ -244,6 +244,7 @@ export default function ShoppingListCard({
                         </div>
                     </div>
 
+                    </div>
                 </div>
             )}
         </div>

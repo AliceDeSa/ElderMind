@@ -9,18 +9,67 @@ export default function Goals() {
     const [totalPercentage, setTotalPercentage] = useState(100);
 
     useEffect(() => {
-        const total = localAllocation.reduce((acc, curr) => acc + curr.value, 0);
+        const total = localAllocation.reduce((acc, curr) => acc + Number(curr.value), 0);
         setTotalPercentage(total);
     }, [localAllocation]);
 
     useEffect(() => {
-        setLocalAllocation(budgetAllocation);
+        setLocalAllocation(budgetAllocation.map(item => ({ ...item, value: Number(item.value) })));
     }, [budgetAllocation]);
 
     const handleSliderChange = (id, newValue) => {
-        setLocalAllocation(prev =>
-            prev.map(item => item.id === id ? { ...item, value: parseInt(newValue) } : item)
-        );
+        const newTargetValue = parseInt(newValue, 10);
+        if (isNaN(newTargetValue)) return;
+
+        setLocalAllocation(prev => {
+            const targetIndex = prev.findIndex(item => item.id === id);
+            if (targetIndex === -1) return prev;
+            
+            const targetItem = prev[targetIndex];
+            const diff = newTargetValue - targetItem.value;
+            
+            if (diff === 0) return prev;
+            
+            let newAllocation = prev.map(item => ({ ...item }));
+            newAllocation[targetIndex].value = newTargetValue;
+            
+            let remainingDiff = diff;
+            const factor = remainingDiff > 0 ? -1 : 1;
+            let absDiff = Math.abs(remainingDiff);
+            
+            let others = newAllocation.filter(item => item.id !== id);
+            
+            let iterations = 0;
+            while (absDiff > 0 && iterations < 1000) {
+                iterations++;
+                let changed = false;
+                for (let i = 0; i < others.length; i++) {
+                    if (absDiff === 0) break;
+                    const otherItem = others[i];
+                    
+                    if (factor === -1) { // Need to subtract
+                        if (otherItem.value > 0) {
+                            otherItem.value--;
+                            absDiff--;
+                            changed = true;
+                        }
+                    } else { // Need to add
+                        if (otherItem.value < 100) {
+                            otherItem.value++;
+                            absDiff--;
+                            changed = true;
+                        }
+                    }
+                }
+                if (!changed) break; 
+            }
+            
+            if (absDiff > 0) {
+                newAllocation[targetIndex].value += (absDiff * (factor === -1 ? -1 : 1));
+            }
+            
+            return newAllocation;
+        });
     };
 
     const handleSave = () => {
@@ -148,13 +197,6 @@ export default function Goals() {
                                         style={{ '--thumb-color': item.color }}
                                     />
 
-                                    {/* Value label - Centered and White */}
-                                    <div
-                                        className="absolute top-[24px] transition-all duration-75 text-[10px] font-bold text-white -translate-x-1/2 pointer-events-none"
-                                        style={{ left: `calc(${item.value}% + (8px - ${item.value} * 0.16px))` }}
-                                    >
-                                        {item.value}%
-                                    </div>
                                 </div>
                             </div>
                         ))}

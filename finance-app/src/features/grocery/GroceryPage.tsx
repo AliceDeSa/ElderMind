@@ -68,7 +68,7 @@ export default function GroceryPage() {
                     <button
                         onClick={() => setIsCreatingList(true)}
                         disabled={isCreatingList}
-                        className="px-6 py-3 bg-primary hover:bg-primary/90 text-white rounded-xl transition-all shadow-lg hover:shadow-primary/30 font-bold flex items-center gap-2 disabled:opacity-50"
+                        className="px-4 py-3 md:px-6 bg-primary hover:bg-primary/90 text-white rounded-xl transition-all shadow-lg hover:shadow-primary/30 font-bold flex items-center gap-2 disabled:opacity-50 whitespace-nowrap flex-shrink-0"
                     >
                         <Plus size={20} />
                         {t('newList')}

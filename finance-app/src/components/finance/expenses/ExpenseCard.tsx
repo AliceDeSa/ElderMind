@@ -153,7 +153,7 @@ export default function ExpenseCard({
                         {(provided) => (
                             <div className="overflow-x-auto">
                                 <table
-                                    className="w-full text-left border-collapse"
+                                    className="w-full min-w-[600px] text-left border-collapse"
                                     ref={provided.innerRef}
                                     {...provided.droppableProps}
                                 >

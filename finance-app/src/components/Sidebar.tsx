@@ -127,12 +127,12 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps): React.ReactE
                         : 'text-textSecondary hover:bg-surfaceCard hover:text-textMain'
                       }`}
                   >
-                    <div className="flex items-center space-x-3">
+                    <div className="flex items-center space-x-3 overflow-hidden">
                       <item.icon
                         size={20}
-                        className={item.active ? 'text-primary' : 'text-textSecondary group-hover:text-textMain'}
+                        className={`flex-shrink-0 ${item.active ? 'text-primary' : 'text-textSecondary group-hover:text-textMain'}`}
                       />
-                      <span className="font-medium text-sm">{item.label}</span>
+                      <span className="font-medium text-sm truncate">{item.label}</span>
                     </div>
                     {item.badge && (
                       <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${item.active ? 'bg-primary text-white' : 'bg-primary/10 text-primary group-hover:bg-primary/20'}`}>

@@ -60,7 +60,7 @@ export default function SummaryCards({
                 </div>
 
                 {/* Balance + Income + Expense row */}
-                <div className="grid grid-cols-3 divide-x divide-border/20">
+                <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border/20">
                     {/* Saldo */}
                     <div className="px-4 py-5 flex flex-col items-center text-center">
                         <span className="text-[10px] font-bold uppercase tracking-widest text-textSecondary mb-2">
