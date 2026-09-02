@@ -114,17 +114,6 @@ export default function Goals() {
                                 </div>
                             ))}
                         </div>
-
-                        {/* Indicador de saldo restante */}
-                        <div className={`mt-6 w-full px-3 py-2.5 rounded-xl text-center text-xs font-bold transition-all ${
-                            isExact  ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
-                            isOver   ? 'bg-red-500/10 text-red-400 border border-red-500/20' :
-                                       'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20'
-                        }`}>
-                            {isExact  ? '✓ Distribuição completa (100%)' :
-                             isOver   ? `▲ ${totalPercentage - 100}% acima do limite` :
-                                        `▼ Faltam ${100 - totalPercentage}% para completar`}
-                        </div>
                     </div>
 
                     {/* Reset Button */}
@@ -138,15 +127,8 @@ export default function Goals() {
 
                 {/* Right Card: Sliders independentes */}
                 <div className="lg:col-span-8 bg-[#111111] rounded-[24px] p-6 shadow-2xl border border-white/[0.03] flex flex-col h-full">
-                    <div className="flex items-center justify-between mb-6">
+                    <div className="mb-6">
                         <h3 className="text-white font-bold text-base">Ajuste de Alocação</h3>
-                        <span className={`text-xs font-bold px-3 py-1 rounded-full ${
-                            isExact ? 'bg-emerald-500/10 text-emerald-400' :
-                            isOver  ? 'bg-red-500/10 text-red-400' :
-                                      'bg-yellow-500/10 text-yellow-400'
-                        }`}>
-                            {totalPercentage}/100%
-                        </span>
                     </div>
 
                     <div className="flex-1 space-y-5">
