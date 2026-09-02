@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import RecoverPassword from './pages/RecoverPassword';
@@ -22,6 +24,15 @@ import Logger from './core/Logger';
 Logger.sys('ElderMind Finance App inicializando...');
 
 function App(): JSX.Element {
+  const { i18n } = useTranslation();
+
+  // Sincroniza o atributo lang do HTML com o idioma do app.
+  // Isso impede que o tradutor do navegador (Chrome/Safari) interfira,
+  // pois o browser detecta corretamente o idioma da página.
+  useEffect(() => {
+    document.documentElement.lang = i18n.language;
+  }, [i18n.language]);
+
   return (
     <AuthProvider>
       <BrowserRouter>
