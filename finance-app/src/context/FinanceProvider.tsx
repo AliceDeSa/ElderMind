@@ -13,6 +13,7 @@ import { useBudget } from '../hooks/useBudget';
 import { useEducation } from '../hooks/useEducation';
 import type { Card, Income, Expense, BudgetAllocation, FinancialGoal, EducationProgress, FinanceSummary, YearlyStats } from '../types/models';
 import Logger from '../core/Logger';
+import { getExpenseInstallmentInfo } from '../utils/installments';
 
 interface FinanceContextValue {
     // State
@@ -119,8 +120,8 @@ export function FinanceProvider({ children }: FinanceProviderProps): JSX.Element
             i => i.recurring || i.month === selectedMonth
         );
         const filteredExpenses = cardsHook.expenses.filter(e => {
-            const d = new Date(e.date);
-            return d.getMonth() === selectedMonth;
+            const info = getExpenseInstallmentInfo(e, selectedMonth, selectedYear);
+            return info.applies;
         });
 
         const totalIncome = filteredIncomes.reduce((acc, curr) => acc + Number(curr.amount), 0);
@@ -139,8 +140,8 @@ export function FinanceProvider({ children }: FinanceProviderProps): JSX.Element
 
         return monthsNames.map((name, index) => {
             const monthlyExpenses = cardsHook.expenses.filter(e => {
-                const d = new Date(e.date);
-                return d.getMonth() === index;
+                const info = getExpenseInstallmentInfo(e, index, selectedYear);
+                return info.applies;
             });
 
             const monthlyIncomes = incomesHook.incomes.filter(

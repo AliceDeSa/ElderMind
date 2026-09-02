@@ -1,0 +1,30 @@
+{
+    "greeting": "Hello, {{name}}! 👋",
+    "greetingMorning": "Good morning, {{name}}! ☀️",
+    "greetingAfternoon": "Good afternoon, {{name}}! 🌤️",
+    "greetingEvening": "Good evening, {{name}}! 🌙",
+    "subtitle": "Here's your financial summary",
+    "summary": {
+        "title": "Monthly Overview",
+        "income": "Income",
+        "expense": "Expenses",
+        "balance": "Balance",
+        "month": "Current month"
+    },
+    "quickActions": {
+        "title": "Quick Actions",
+        "addIncome": "Add Income",
+        "addExpense": "Add Expense",
+        "viewBudget": "View Budget",
+        "viewDashboard": "Dashboard",
+        "grocery": "Grocery List",
+        "emergency": "Emergency Fund",
+        "goals": "My Goals",
+        "calculator": "Calculator"
+    },
+    "status": {
+        "positive": "Your finances are looking great this month! 🎉",
+        "negative": "Heads up: expenses exceed income this month.",
+        "neutral": "Income and expenses are balanced this month."
+    }
+}

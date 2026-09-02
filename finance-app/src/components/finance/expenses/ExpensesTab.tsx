@@ -13,6 +13,7 @@ import ExpenseCard from './ExpenseCard';
 import ExpenseModal from './ExpenseModal';
 import AddCardModal from './AddCardModal';
 import { useTranslation } from 'react-i18next';
+import { getExpenseInstallmentInfo } from '../../../utils/installments';
 
 export default function ExpensesTab() {
     const { t } = useTranslation(['finance', 'common']);
@@ -92,8 +93,8 @@ export default function ExpensesTab() {
         }
     };
 
-    const onDragEnd = (result: DropResult) => {
-        const { source, destination } = result;
+    const onDragEnd = async (result: DropResult) => {
+        const { source, destination, draggableId } = result;
         if (!destination) return;
 
         const sourceCardIndex = cards.findIndex(c => c.id === source.droppableId);
@@ -105,10 +106,20 @@ export default function ExpensesTab() {
         const sourceCard = newCards[sourceCardIndex];
         const destCard = newCards[destCardIndex];
 
-        const [movedExpense] = sourceCard.expenses.splice(source.index, 1);
-        destCard.expenses.splice(destination.index, 0, movedExpense);
+        const expenseToMoveIndex = sourceCard.expenses.findIndex(e => e.id === draggableId);
+        if (expenseToMoveIndex === -1) return;
+
+        const [movedExpense] = sourceCard.expenses.splice(expenseToMoveIndex, 1);
+        destCard.expenses.push(movedExpense);
 
         setCards(newCards);
+
+        // Update card association in DB
+        try {
+            await updateExpense(draggableId, { card_id: destination.droppableId });
+        } catch (error) {
+            console.error('Drag and drop update fail:', error);
+        }
     };
 
     const openAddExpense = (cardId: string) => {
@@ -132,13 +143,19 @@ export default function ExpensesTab() {
         e.preventDefault();
         const { cardId, editMode, expenseId } = expenseModal;
 
+        const yyyy = currentDate.getFullYear();
+        const mm = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const dd = String(currentDate.getDate()).padStart(2, '0');
+        const formattedDate = `${yyyy}-${mm}-${dd}`;
+
         const expenseData = {
             description: formData.description,
             amount: parseFloat(formData.amount),
             category: formData.category,
             installments: `${formData.installments}/1`,
             budgetId: formData.budgetId,
-            tag: formData.tag
+            tag: formData.tag,
+            date: formattedDate
         };
 
         if (editMode && expenseId) {
@@ -152,8 +169,30 @@ export default function ExpensesTab() {
 
     const handleDeleteExpense = async (cardId: string, expenseId: string) => {
         if (window.confirm(t('common:messages.confirmDelete'))) {
-            await deleteExpense(cardId, expenseId);
+            await deleteExpense(expenseId);
         }
+    };
+
+    const handleInlineAddExpense = async (cardId: string, expenseData: Partial<any>) => {
+        const yyyy = currentDate.getFullYear();
+        const mm = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const dd = String(currentDate.getDate()).padStart(2, '0');
+        const defaultDate = `${yyyy}-${mm}-${dd}`;
+
+        const newExpense = {
+            description: expenseData.description || '',
+            amount: expenseData.amount || 0,
+            category: expenseData.category || 'Outros',
+            installments: expenseData.installments || '1/1',
+            budgetId: expenseData.budgetId || 'fixed',
+            tag: expenseData.tag || '',
+            date: expenseData.date || defaultDate
+        };
+        await addExpense(cardId, newExpense);
+    };
+
+    const handleInlineEditExpense = async (cardId: string, expenseId: string, updates: Partial<any>) => {
+        await updateExpense(cardId, expenseId, updates);
     };
 
     return (
@@ -177,20 +216,40 @@ export default function ExpensesTab() {
             {/* Drag Drop Context */}
             <DragDropContext onDragEnd={onDragEnd}>
                 <div className="space-y-4">
-                    {cards.map(card => (
-                        <ExpenseCard
-                            key={card.id}
-                            card={card}
-                            isExpanded={expandedCards.includes(card.id)}
-                            budgetAllocation={budgetAllocation}
-                            onToggleExpand={() => toggleExpand(card.id)}
-                            onAddExpense={() => openAddExpense(card.id)}
-                            onEditExpense={(expense) => openEditExpense(card.id, expense)}
-                            onDeleteExpense={(expenseId) => handleDeleteExpense(card.id, expenseId)}
-                            onEditCard={() => handleOpenEditCard(card)}
-                            onDeleteCard={() => handleDeleteCard(card.id)}
-                        />
-                    ))}
+                    {cards.map(card => {
+                        const targetMonth = currentDate.getMonth();
+                        const targetYear = currentDate.getFullYear();
+                        
+                        const filteredExpenses = card.expenses.map(e => {
+                            const info = getExpenseInstallmentInfo(e, targetMonth, targetYear);
+                            if (info.applies) {
+                                return {
+                                    ...e,
+                                    displayInstallments: `${info.currentInstallment}/${info.totalInstallments}`
+                                };
+                            }
+                            return null;
+                        }).filter(Boolean) as any[];
+
+                        const displayCard = { ...card, expenses: filteredExpenses };
+
+                        return (
+                            <ExpenseCard
+                                key={displayCard.id}
+                                card={displayCard}
+                                isExpanded={expandedCards.includes(displayCard.id)}
+                                budgetAllocation={budgetAllocation}
+                                onToggleExpand={() => toggleExpand(displayCard.id)}
+                                onAddExpense={() => openAddExpense(displayCard.id)}
+                                onEditExpense={(expense) => openEditExpense(displayCard.id, expense)}
+                                onDeleteExpense={(expenseId) => handleDeleteExpense(displayCard.id, expenseId)}
+                                onAddExpenseInline={(expenseData) => handleInlineAddExpense(displayCard.id, expenseData)}
+                                onInlineEditExpense={(expenseId, updates) => handleInlineEditExpense(displayCard.id, expenseId, updates)}
+                                onEditCard={() => handleOpenEditCard(displayCard)}
+                                onDeleteCard={() => handleDeleteCard(displayCard.id)}
+                            />
+                        );
+                    })}
                 </div>
             </DragDropContext>
 

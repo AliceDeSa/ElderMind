@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import IncomeTab from '../components/finance/IncomeTab';
 import ExpensesTab from '../components/finance/expenses/ExpensesTab';
 import AnalysisTab from '../components/finance/AnalysisTab';
@@ -6,7 +7,19 @@ import { useTranslation } from 'react-i18next';
 
 export default function IncomesExpenses() {
     const { t } = useTranslation(['finance', 'common']);
-    const [activeTab, setActiveTab] = useState('rendas'); // rendas, despesas, analise
+    const [searchParams] = useSearchParams();
+    const tabParam = searchParams.get('tab');
+    const validTabs = ['rendas', 'despesas', 'analise'];
+    const [activeTab, setActiveTab] = useState(
+        validTabs.includes(tabParam || '') ? tabParam : 'rendas'
+    );
+
+    // Sync if URL param changes (e.g. navigating with browser back/forward)
+    useEffect(() => {
+        if (tabParam && validTabs.includes(tabParam)) {
+            setActiveTab(tabParam);
+        }
+    }, [tabParam]);
 
     return (
         <div className="text-textMain pb-10">

@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import RecoverPassword from './pages/RecoverPassword';
+import HomePage from './pages/Home/HomePage';
 import Dashboard from './pages/Dashboard/Dashboard';
 import IncomesExpenses from './pages/IncomesExpenses';
 import Goals from './pages/Goals';
@@ -38,7 +39,9 @@ function App(): JSX.Element {
                 <FinanceProvider>
                   <DashboardLayout>
                     <Routes>
-                      <Route path="/" element={<Dashboard />} />
+                      {/* Home is the entry point */}
+                      <Route path="/" element={<Navigate to="/home" replace />} />
+                      <Route path="/home" element={<HomePage />} />
                       <Route path="/dashboard" element={<Dashboard />} />
                       <Route path="/finances" element={<IncomesExpenses />} />
                       <Route path="/goals" element={<Goals />} />
@@ -47,7 +50,7 @@ function App(): JSX.Element {
                       <Route path="/calculator" element={<Calculator />} />
                       <Route path="/grocery" element={<GroceryPage />} />
                       <Route path="/emergency" element={<EmergencyReserve />} />
-                      <Route path="*" element={<Navigate to="/" replace />} />
+                      <Route path="*" element={<Navigate to="/home" replace />} />
                     </Routes>
                   </DashboardLayout>
                 </FinanceProvider>
@@ -63,4 +66,3 @@ function App(): JSX.Element {
 }
 
 export default App;
-

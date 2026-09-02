@@ -15,6 +15,7 @@ import financePT from './locales/pt-BR/finance.json';
 import educationPT from './locales/pt-BR/education.json';
 import goalsPT from './locales/pt-BR/goals.json';
 import groceryPT from './locales/pt-BR/grocery.json';
+import homePT from './locales/pt-BR/home.json';
 
 import commonEN from './locales/en-US/common.json';
 import authEN from './locales/en-US/auth.json';
@@ -23,6 +24,7 @@ import financeEN from './locales/en-US/finance.json';
 import educationEN from './locales/en-US/education.json';
 import goalsEN from './locales/en-US/goals.json';
 import groceryEN from './locales/en-US/grocery.json';
+import homeEN from './locales/en-US/home.json';
 
 const resources = {
     'pt-BR': {
@@ -32,7 +34,8 @@ const resources = {
         finance: financePT,
         education: educationPT,
         goals: goalsPT,
-        grocery: groceryPT
+        grocery: groceryPT,
+        home: homePT
     },
     'en-US': {
         common: commonEN,
@@ -41,7 +44,8 @@ const resources = {
         finance: financeEN,
         education: educationEN,
         goals: goalsEN,
-        grocery: groceryEN
+        grocery: groceryEN,
+        home: homeEN
     }
 };
 
@@ -52,7 +56,7 @@ i18n
         resources,
         fallbackLng: 'pt-BR',
         defaultNS: 'common',
-        ns: ['common', 'auth', 'dashboard', 'finance', 'education', 'goals', 'grocery'],
+        ns: ['common', 'auth', 'dashboard', 'finance', 'education', 'goals', 'grocery', 'home'],
 
         detection: {
             order: ['localStorage', 'navigator'],

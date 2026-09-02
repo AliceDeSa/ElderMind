@@ -26,12 +26,17 @@ export function useExpenses(
     ): Promise<{ success: boolean; error?: any }> => {
         if (!userId) return { success: false };
 
-        const payload = {
-            ...expense,
+        const payload: any = {
+            description: expense.description,
+            amount: Number(expense.amount) || 0,
+            category: expense.category,
+            installments: expense.installments,
+            budget_id: expense.budgetId,
+            tag: expense.tag,
             user_id: userId,
-            card_id: cardId,
-            amount: Number(expense.amount) || 0
+            card_id: cardId
         };
+        if (expense.date) payload.date = expense.date;
 
         try {
             Logger.finance('Adicionando despesa', payload);
@@ -56,11 +61,21 @@ export function useExpenses(
     ): Promise<{ success: boolean; error?: any }> => {
         if (!userId) return { success: false };
 
+        const payload: any = {};
+        if (expense.description !== undefined) payload.description = expense.description;
+        if (expense.amount !== undefined) payload.amount = Number(expense.amount);
+        if (expense.category !== undefined) payload.category = expense.category;
+        if (expense.installments !== undefined) payload.installments = expense.installments;
+        if (expense.budgetId !== undefined) payload.budget_id = expense.budgetId;
+        if (expense.tag !== undefined) payload.tag = expense.tag;
+        if (expense.date !== undefined) payload.date = expense.date;
+        if (expense.card_id !== undefined) payload.card_id = expense.card_id;
+
         try {
             Logger.finance('Atualizando despesa', expenseId);
             const { error } = await supabase
                 .from('expenses')
-                .update(expense)
+                .update(payload)
                 .eq('id', expenseId)
                 .eq('user_id', userId);
 

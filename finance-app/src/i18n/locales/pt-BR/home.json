@@ -1,0 +1,30 @@
+{
+    "greeting": "Olá, {{name}}! 👋",
+    "greetingMorning": "Bom dia, {{name}}! ☀️",
+    "greetingAfternoon": "Boa tarde, {{name}}! 🌤️",
+    "greetingEvening": "Boa noite, {{name}}! 🌙",
+    "subtitle": "Veja o resumo das suas finanças",
+    "summary": {
+        "title": "Visão Geral do Mês",
+        "income": "Receita",
+        "expense": "Gastos",
+        "balance": "Saldo",
+        "month": "Mês atual"
+    },
+    "quickActions": {
+        "title": "Ações Rápidas",
+        "addIncome": "Registrar Renda",
+        "addExpense": "Registrar Despesa",
+        "viewBudget": "Ver Orçamento",
+        "viewDashboard": "Dashboard",
+        "grocery": "Lista de Compras",
+        "emergency": "Reserva de Emergência",
+        "goals": "Meus Objetivos",
+        "calculator": "Calculadora"
+    },
+    "status": {
+        "positive": "Suas finanças estão positivas este mês! 🎉",
+        "negative": "Atenção: gastos acima da receita este mês.",
+        "neutral": "Receita e gastos equilibrados este mês."
+    }
+}

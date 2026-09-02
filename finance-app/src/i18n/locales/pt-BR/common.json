@@ -56,7 +56,8 @@
         "back": "Voltar"
     },
     "menu": {
-        "dashboard": "Painel Inicial",
+        "home": "Início",
+        "dashboard": "Dashboard",
         "finances": "Rendas e Gastos",
         "goals": "Orçamento",
         "objectives": "Objetivos",
@@ -65,5 +66,11 @@
         "grocery": "Lista de Compras",
         "emergency": "Reserva de Emergência",
         "logout": "Sair"
+    },
+    "menuGroups": {
+        "principal": "Principal",
+        "controle": "Controle",
+        "planejamento": "Planejamento",
+        "ferramentas": "Ferramentas"
     }
 }

@@ -4,6 +4,7 @@
 
 import { Droppable } from '@hello-pangea/dnd';
 import { CreditCard, Plus, ChevronDown, ChevronUp, Pencil, Trash2 } from 'lucide-react';
+import { useState } from 'react';
 import ExpenseItem from './ExpenseItem';
 
 interface Expense {
@@ -38,6 +39,8 @@ interface ExpenseCardProps {
     onAddExpense: () => void;
     onEditExpense: (expense: Expense) => void;
     onDeleteExpense: (expenseId: string) => void;
+    onAddExpenseInline: (expense: Partial<Expense>) => void;
+    onInlineEditExpense: (expenseId: string, updates: Partial<Expense>) => void;
     onEditCard: () => void;
     onDeleteCard: () => void;
 }
@@ -50,9 +53,34 @@ export default function ExpenseCard({
     onAddExpense,
     onEditExpense,
     onDeleteExpense,
+    onAddExpenseInline,
+    onInlineEditExpense,
     onEditCard,
     onDeleteCard
 }: ExpenseCardProps) {
+    const [quickAdd, setQuickAdd] = useState({
+        description: '',
+        amount: '',
+        date: new Date().toISOString().split('T')[0],
+        installments: '1',
+        category: 'Outros',
+        budgetId: 'fixed',
+        tag: ''
+    });
+
+    const handleQuickAddKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' && quickAdd.description && quickAdd.amount) {
+            const parsedAmount = parseFloat(quickAdd.amount.replace(',', '.'));
+            onAddExpenseInline({
+                ...quickAdd,
+                amount: isNaN(parsedAmount) ? 0 : parsedAmount,
+                installments: `${quickAdd.installments}/1`
+            });
+            // Reseta campos, mantendo data e categoria por conveniência
+            setQuickAdd({ ...quickAdd, description: '', amount: '', installments: '1' });
+        }
+    };
+
     const totalUsed = card.expenses.reduce((acc, curr) => acc + curr.amount, 0);
     const available = card.limit - totalUsed;
 
@@ -123,22 +151,101 @@ export default function ExpenseCard({
 
                     <Droppable droppableId={card.id}>
                         {(provided) => (
-                            <div
-                                className="space-y-2 min-h-[50px]"
-                                ref={provided.innerRef}
-                                {...provided.droppableProps}
-                            >
-                                {card.expenses.map((expense, index) => (
-                                    <ExpenseItem
-                                        key={expense.id}
-                                        expense={expense}
-                                        index={index}
-                                        budgetAllocation={budgetAllocation}
-                                        onEdit={() => onEditExpense(expense)}
-                                        onDelete={() => onDeleteExpense(expense.id)}
-                                    />
-                                ))}
-                                {provided.placeholder}
+                            <div className="overflow-x-auto">
+                                <table
+                                    className="w-full text-left border-collapse"
+                                    ref={provided.innerRef}
+                                    {...provided.droppableProps}
+                                >
+                                    <thead>
+                                        <tr className="border-b border-border/30 text-textSecondary text-xs uppercase tracking-wider">
+                                            <th className="p-2 w-10 text-center"></th>
+                                            <th className="p-2 font-medium">Descrição</th>
+                                            <th className="p-2 font-medium">Data</th>
+                                            <th className="p-2 font-medium">Valor</th>
+                                            <th className="p-2 font-medium">Parc.</th>
+                                            <th className="p-2 font-medium">Categoria</th>
+                                            <th className="p-2 font-medium text-right">Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="min-h-[50px]">
+                                        {card.expenses.map((expense, index) => (
+                                            <ExpenseItem
+                                                key={expense.id}
+                                                expense={expense}
+                                                index={index}
+                                                onDelete={() => onDeleteExpense(expense.id)}
+                                                onInlineEdit={(updates) => onInlineEditExpense(expense.id, updates)}
+                                            />
+                                        ))}
+                                        {provided.placeholder}
+                                        
+                                        {/* Quick Add Row */}
+                                        <tr className="border-t border-border/30 hover:bg-white/5 transition-colors">
+                                            <td className="p-2 text-center text-primary font-bold">+</td>
+                                            <td className="p-2">
+                                                <input
+                                                    type="text"
+                                                    placeholder="Nova despesa..."
+                                                    className="w-full bg-transparent border-none text-sm text-white placeholder:text-textSecondary outline-none focus:ring-1 focus:ring-primary rounded px-1"
+                                                    value={quickAdd.description}
+                                                    onChange={e => setQuickAdd({...quickAdd, description: e.target.value})}
+                                                    onKeyDown={handleQuickAddKeyDown}
+                                                />
+                                            </td>
+                                            <td className="p-2">
+                                                <input
+                                                    type="date"
+                                                    className="w-full bg-transparent border-none text-sm text-textSecondary outline-none focus:ring-1 focus:ring-primary rounded px-1 [color-scheme:dark]"
+                                                    value={quickAdd.date}
+                                                    onChange={e => setQuickAdd({...quickAdd, date: e.target.value})}
+                                                    onKeyDown={handleQuickAddKeyDown}
+                                                />
+                                            </td>
+                                            <td className="p-2">
+                                                <input
+                                                    type="number"
+                                                    step="0.01"
+                                                    placeholder="Valor"
+                                                    className="w-24 bg-transparent border-none text-sm text-white outline-none focus:ring-1 focus:ring-primary rounded px-1"
+                                                    value={quickAdd.amount}
+                                                    onChange={e => setQuickAdd({...quickAdd, amount: e.target.value})}
+                                                    onKeyDown={handleQuickAddKeyDown}
+                                                />
+                                            </td>
+                                            <td className="p-2">
+                                                <input
+                                                    type="number"
+                                                    min="1"
+                                                    placeholder="Parc"
+                                                    className="w-16 bg-transparent border-none text-sm text-textSecondary outline-none focus:ring-1 focus:ring-primary rounded px-1"
+                                                    value={quickAdd.installments}
+                                                    onChange={e => setQuickAdd({...quickAdd, installments: e.target.value})}
+                                                    onKeyDown={handleQuickAddKeyDown}
+                                                />
+                                            </td>
+                                            <td className="p-2">
+                                                <select
+                                                    className="w-full bg-transparent border-none text-sm text-textSecondary outline-none focus:ring-1 focus:ring-primary rounded px-1"
+                                                    value={quickAdd.category}
+                                                    onChange={e => setQuickAdd({...quickAdd, category: e.target.value})}
+                                                    onKeyDown={handleQuickAddKeyDown}
+                                                >
+                                                    <option value="Alimentação">Alimentação</option>
+                                                    <option value="Transporte">Transporte</option>
+                                                    <option value="Lazer">Lazer</option>
+                                                    <option value="Saúde">Saúde</option>
+                                                    <option value="Educação">Educação</option>
+                                                    <option value="Casa">Casa</option>
+                                                    <option value="Outros">Outros</option>
+                                                </select>
+                                            </td>
+                                            <td className="p-2 text-right text-xs text-textSecondary">
+                                                Enter para salvar
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         )}
                     </Droppable>

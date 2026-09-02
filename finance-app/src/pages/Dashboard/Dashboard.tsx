@@ -115,6 +115,7 @@ const Dashboard: React.FC = () => {
                 }))}
                 creditCards={cardsUsage}
                 calculatePercentage={calculatePercentage}
+                variant="compact-unified"
             />
 
             {/* Main Content Grid */}
