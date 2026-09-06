@@ -317,6 +317,7 @@ export default function ExpenseCard({
                                     </tbody>
                                 </table>
                             </div>
+                            </div>
                         )}
                     </Droppable>
                 </div>
