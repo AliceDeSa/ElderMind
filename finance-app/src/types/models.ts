@@ -52,6 +52,7 @@ export interface Expense {
     budget_id?: string;
     budgetId?: string; // Frontend alias
     tag?: string;
+    recurring?: boolean;
 }
 
 export interface BudgetAllocation {

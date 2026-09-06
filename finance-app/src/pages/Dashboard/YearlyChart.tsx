@@ -48,49 +48,52 @@ export default function YearlyChart({ yearlyData, cards }: YearlyChartProps) {
                 </div>
             </div>
 
-            <div className="h-[300px] min-h-[300px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={yearlyData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                        <XAxis
-                            dataKey="name"
-                            axisLine={false}
-                            tickLine={false}
-                            tick={{ fill: '#94a3b8', fontSize: 12 }}
-                            dy={10}
-                        />
-                        <YAxis
-                            axisLine={false}
-                            tickLine={false}
-                            tick={{ fill: '#94a3b8', fontSize: 12 }}
-                        />
-                        <Tooltip
-                            cursor={{ fill: 'rgba(255,255,255,0.05)' }}
-                            contentStyle={{
-                                backgroundColor: '#1e1b4b',
-                                border: '1px solid rgba(255,255,255,0.1)',
-                                borderRadius: '12px',
-                                color: '#fff'
-                            }}
-                        />
-                        {chartView === 'expense' ? (
-                            cards.map((card, idx) => (
+            <div className="w-full overflow-x-auto pb-2">
+                <div className="h-[300px] min-h-[300px] min-w-[550px] md:min-w-0 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={yearlyData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                            <XAxis
+                                dataKey="name"
+                                axisLine={false}
+                                tickLine={false}
+                                tick={{ fill: '#94a3b8', fontSize: 12 }}
+                                dy={10}
+                            />
+                            <YAxis
+                                axisLine={false}
+                                tickLine={false}
+                                tick={{ fill: '#94a3b8', fontSize: 11 }}
+                                tickFormatter={(val) => val >= 1000 ? `R$ ${(val/1000).toFixed(0)}k` : `R$ ${val}`}
+                            />
+                            <Tooltip
+                                cursor={{ fill: 'rgba(255,255,255,0.05)' }}
+                                contentStyle={{
+                                    backgroundColor: '#1e1b4b',
+                                    border: '1px solid rgba(255,255,255,0.1)',
+                                    borderRadius: '12px',
+                                    color: '#fff'
+                                }}
+                            />
+                            {chartView === 'expense' ? (
+                                cards.map((card, idx) => (
+                                    <Bar
+                                        key={card.id}
+                                        dataKey={card.name}
+                                        stackId="a"
+                                        fill={idx % 2 === 0 ? '#8b5cf6' : '#f97316'}
+                                        radius={[4, 4, 0, 0]}
+                                    />
+                                ))
+                            ) : (
                                 <Bar
-                                    key={card.id}
-                                    dataKey={card.name}
-                                    stackId="a"
-                                    fill={idx % 2 === 0 ? '#8b5cf6' : '#f97316'}
+                                    dataKey="profit"
+                                    fill="#10b981"
                                     radius={[4, 4, 0, 0]}
                                 />
-                            ))
-                        ) : (
-                            <Bar
-                                dataKey="profit"
-                                fill="#10b981"
-                                radius={[4, 4, 0, 0]}
-                            />
-                        )}
-                    </BarChart>
-                </ResponsiveContainer>
+                            )}
+                        </BarChart>
+                    </ResponsiveContainer>
+                </div>
             </div>
         </div>
     );

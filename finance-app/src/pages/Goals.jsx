@@ -29,16 +29,54 @@ export default function Goals() {
         updateBudgetAllocation(localAllocation);
     };
 
+    const PRESET_PROFILES = [
+        {
+            id: 'debts',
+            title: 'Quitação de Dívidas',
+            desc: 'Prioridade em redução de despesas e metas de quitação',
+            allocation: [
+                { id: 'fixed', name: 'Custos Fixos', value: 50, color: '#3b82f6' },
+                { id: 'goals', name: 'Metas', value: 25, color: '#7c3aed' },
+                { id: 'comfort', name: 'Conforto', value: 10, color: '#f472b6' },
+                { id: 'freedom', name: 'Liberdade Financeira', value: 5, color: '#818cf8' },
+                { id: 'pleasure', name: 'Prazeres', value: 5, color: '#f97316' },
+                { id: 'knowledge', name: 'Conhecimento', value: 5, color: '#fbbf24' }
+            ]
+        },
+        {
+            id: 'balanced',
+            title: 'Organização Geral',
+            desc: 'Distribuição equilibrada para controle diário',
+            allocation: [
+                { id: 'fixed', name: 'Custos Fixos', value: 40, color: '#3b82f6' },
+                { id: 'freedom', name: 'Liberdade Financeira', value: 20, color: '#818cf8' },
+                { id: 'goals', name: 'Metas', value: 15, color: '#7c3aed' },
+                { id: 'comfort', name: 'Conforto', value: 15, color: '#f472b6' },
+                { id: 'pleasure', name: 'Prazeres', value: 5, color: '#f97316' },
+                { id: 'knowledge', name: 'Conhecimento', value: 5, color: '#fbbf24' }
+            ]
+        },
+        {
+            id: 'investor',
+            title: 'Foco Investidor',
+            desc: 'Aporte massivo em ativos e conhecimento',
+            allocation: [
+                { id: 'fixed', name: 'Custos Fixos', value: 35, color: '#3b82f6' },
+                { id: 'freedom', name: 'Liberdade Financeira', value: 35, color: '#818cf8' },
+                { id: 'goals', name: 'Metas', value: 10, color: '#7c3aed' },
+                { id: 'comfort', name: 'Conforto', value: 10, color: '#f472b6' },
+                { id: 'knowledge', name: 'Conhecimento', value: 5, color: '#fbbf24' },
+                { id: 'pleasure', name: 'Prazeres', value: 5, color: '#f97316' }
+            ]
+        }
+    ];
+
+    const applyPreset = (presetAllocation) => {
+        setLocalAllocation(presetAllocation);
+    };
+
     const handleReset = () => {
-        const defaults = [
-            { id: 'freedom', name: 'Liberdade Financeira', value: 25, color: '#818cf8' },
-            { id: 'fixed', name: 'Custos Fixos', value: 30, color: '#3b82f6' },
-            { id: 'comfort', name: 'Conforto', value: 15, color: '#f472b6' },
-            { id: 'goals', name: 'Metas', value: 15, color: '#7c3aed' },
-            { id: 'pleasure', name: 'Prazeres', value: 10, color: '#f97316' },
-            { id: 'knowledge', name: 'Conhecimento', value: 5, color: '#fbbf24' }
-        ];
-        setLocalAllocation(defaults);
+        applyPreset(PRESET_PROFILES[1].allocation);
     };
 
     const remaining = 100 - totalPercentage;
@@ -52,6 +90,21 @@ export default function Goals() {
             <div className="mb-6 pt-2">
                 <h1 className="text-[26px] font-bold text-white">Gestão de Orçamento</h1>
                 <p className="text-textSecondary text-sm mt-1">Defina como você quer distribuir sua renda mensal</p>
+                
+                {/* Modelos Pré-Criados */}
+                <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
+                    {PRESET_PROFILES.map((profile) => (
+                        <div
+                            key={profile.id}
+                            onClick={() => applyPreset(profile.allocation)}
+                            className="p-3.5 bg-surfaceCard/60 border border-border/40 hover:border-primary/50 rounded-xl cursor-pointer transition-all hover:bg-surfaceCard group"
+                        >
+                            <h4 className="text-xs font-bold text-white group-hover:text-primary transition-colors">{profile.title}</h4>
+                            <p className="text-[11px] text-textSecondary mt-0.5">{profile.desc}</p>
+                            <span className="inline-block text-[10px] text-primary font-bold mt-2">Aplicar Modelo →</span>
+                        </div>
+                    ))}
+                </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">

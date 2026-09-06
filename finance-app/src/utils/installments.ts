@@ -33,6 +33,15 @@ export function getExpenseInstallmentInfo(expense: Expense, targetMonth: number,
     // Calcular a diferença em meses entre a data de criação e a data alvo
     const monthDiff = (targetYear - dYear) * 12 + (targetMonth - dMonth);
 
+    // Se for recorrente e o mês for igual ou posterior ao início
+    if (expense.recurring && monthDiff >= 0) {
+        return {
+            applies: true,
+            currentInstallment: monthDiff + 1,
+            totalInstallments: 0
+        };
+    }
+
     // Se o mês selecionado for maior ou igual ao mês de início e ainda estiver
     // dentro do número total de parcelas:
     if (monthDiff >= 0 && monthDiff < totalInst) {

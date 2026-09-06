@@ -41,11 +41,44 @@ export function useShoppingLists(userId: string | undefined) {
                 .eq('user_id', userId)
                 .order('created_at', { ascending: false });
 
-            if (listsError) throw listsError;
+            let targetLists = listsData || [];
+
+            // If new user (no lists), auto-create default list with basic items
+            if (targetLists.length === 0) {
+                logger.finance('Criando lista de compras padrão para novo usuário');
+                const { data: newList, error: createError } = await supabase
+                    .from('shopping_lists')
+                    .insert([
+                        {
+                            user_id: userId,
+                            name: 'Lista Básica de Compras',
+                            status: 'planning'
+                        }
+                    ])
+                    .select()
+                    .single();
+
+                if (!createError && newList) {
+                    const defaultItems = [
+                        { name: 'Arroz', quantity: 1, stock: 0, category: 'essenciais', order_index: 0, list_id: newList.id, user_id: userId },
+                        { name: 'Açúcar', quantity: 1, stock: 0, category: 'essenciais', order_index: 1, list_id: newList.id, user_id: userId },
+                        { name: 'Café', quantity: 1, stock: 0, category: 'essenciais', order_index: 2, list_id: newList.id, user_id: userId },
+                        { name: 'Óleo', quantity: 1, stock: 0, category: 'essenciais', order_index: 3, list_id: newList.id, user_id: userId },
+                        { name: 'Leite', quantity: 1, stock: 0, category: 'essenciais', order_index: 4, list_id: newList.id, user_id: userId },
+                        { name: 'Ovos', quantity: 1, stock: 0, category: 'essenciais', order_index: 5, list_id: newList.id, user_id: userId },
+                        { name: 'Feijão', quantity: 1, stock: 0, category: 'essenciais', order_index: 6, list_id: newList.id, user_id: userId },
+                        { name: 'Sal', quantity: 1, stock: 0, category: 'essenciais', order_index: 7, list_id: newList.id, user_id: userId },
+                        { name: 'Detergente', quantity: 10, stock: 0, category: 'essenciais', order_index: 8, list_id: newList.id, user_id: userId }
+                    ];
+
+                    await supabase.from('shopping_items').insert(defaultItems);
+                    targetLists = [newList];
+                }
+            }
 
             // Fetch items for each list
             const listsWithItems: ShoppingListWithItems[] = await Promise.all(
-                (listsData || []).map(async (list) => {
+                targetLists.map(async (list) => {
                     const { data: itemsData, error: itemsError } = await supabase
                         .from('shopping_items')
                         .select('*')

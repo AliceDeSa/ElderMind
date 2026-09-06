@@ -3,7 +3,7 @@ import InvestmentTree from './InvestmentTree/InvestmentTree';
 import WisdomLibrary from './WisdomLibrary/WisdomLibrary';
 import EducationOverview from './EducationOverview';
 import EducationStats from './EducationStats';
-import { BookOpen, TreePine, Home, Trophy } from 'lucide-react';
+import { BookOpen, TreePine, Home, Trophy, AlertTriangle, X } from 'lucide-react';
 import { useEducationStats } from '../../hooks/useEducationStats';
 import { useAchievements } from '../../hooks/useAchievements';
 import AchievementsModal from '../../components/Achievements/AchievementsModal';
@@ -16,15 +16,57 @@ const Education: React.FC = () => {
     const { t } = useTranslation('education');
     const [activeTab, setActiveTab] = useState<TabType>('overview');
     const [showAchievements, setShowAchievements] = useState(false);
+    const [showDevNotice, setShowDevNotice] = useState(() => {
+        return !sessionStorage.getItem('edu_dev_notice_dismissed');
+    });
     const stats = useEducationStats();
     const { newUnlocks, clearNewUnlocks } = useAchievements();
+
+    const handleDismissNotice = () => {
+        sessionStorage.setItem('edu_dev_notice_dismissed', 'true');
+        setShowDevNotice(false);
+    };
 
     const handleNavigate = (tab: 'tree' | 'library') => {
         setActiveTab(tab);
     };
 
     return (
-        <div className="education-page min-h-screen bg-background">
+        <div className="education-page min-h-screen bg-background relative">
+            {/* Dev Notice Modal */}
+            {showDevNotice && (
+                <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
+                    <div className="bg-surfaceCard border border-amber-500/40 rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-4">
+                        <button
+                            onClick={handleDismissNotice}
+                            className="absolute top-4 right-4 text-textSecondary hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors"
+                        >
+                            <X size={20} />
+                        </button>
+                        
+                        <div className="flex items-center gap-3">
+                            <div className="p-3 bg-amber-500/20 text-amber-400 rounded-xl">
+                                <AlertTriangle size={24} />
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-bold text-white">Módulo em Desenvolvimento</h3>
+                                <p className="text-xs text-amber-400 font-semibold">Aviso de Versão Beta</p>
+                            </div>
+                        </div>
+
+                        <p className="text-sm text-textSecondary leading-relaxed">
+                            A seção de **Educação Financeira** ainda está em desenvolvimento ativo. Algumas aulas, quizzes e funcionalidades podem apresentar alterações ou instabilidades temporárias.
+                        </p>
+
+                        <button
+                            onClick={handleDismissNotice}
+                            className="w-full py-3 bg-amber-500 hover:bg-amber-600 text-black font-bold rounded-xl transition-colors text-sm shadow-lg shadow-amber-500/20"
+                        >
+                            Entendi e Quero Continuar
+                        </button>
+                    </div>
+                </div>
+            )}
             <AchievementsModal isOpen={showAchievements} onClose={() => setShowAchievements(false)} />
 
             {newUnlocks.length > 0 && (

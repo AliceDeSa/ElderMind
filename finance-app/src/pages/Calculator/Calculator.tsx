@@ -1,17 +1,13 @@
-/**
- * Calculadora de Juros Compostos
- * Refatorada para usar componentes modulares e hook de cálculo
- */
-
 import { useState } from 'react';
-import { Calculator as CalcIcon, RefreshCcw, Download, BarChart2 } from 'lucide-react';
+import { Calculator as CalcIcon, RefreshCcw, Download, Sparkles, LineChart } from 'lucide-react';
 import { useCompoundInterest } from '../../hooks/useCompoundInterest';
 import CalculatorForm from './CalculatorForm';
 import CalculatorResults from './CalculatorResults';
 import CalculatorChart from './CalculatorChart';
+import CalculatorIntuitive from './CalculatorIntuitive';
 
 export default function Calculator() {
-    const [viewMode, setViewMode] = useState<'simple' | 'advanced'>('simple');
+    const [viewMode, setViewMode] = useState<'intuitive' | 'standard'>('intuitive');
 
     // Inputs
     const [initialValue, setInitialValue] = useState(1000);
@@ -43,10 +39,10 @@ export default function Calculator() {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <h1 className="text-2xl font-bold text-white mb-1 flex items-center gap-3">
-                        <CalcIcon className="text-primary text-3xl" /> Calculadora de Juros Compostos
+                        <CalcIcon className="text-primary text-3xl" /> Calculadora Financeira
                     </h1>
                     <p className="text-textSecondary text-sm">
-                        Calcule o poder dos juros compostos e veja como seu dinheiro pode crescer ao longo do tempo
+                        Simule o crescimento do seu patrimônio com a visão ideal para o seu nível de conhecimento.
                     </p>
                 </div>
                 <div className="flex gap-3">
@@ -56,64 +52,65 @@ export default function Calculator() {
                     >
                         <RefreshCcw size={16} /> Redefinir
                     </button>
-                    <button className="px-5 py-2 bg-primary text-white hover:bg-primary/80 rounded-lg flex items-center gap-2 transition-all font-bold text-sm shadow-lg shadow-primary/20">
-                        <Download size={16} /> Exportar
-                    </button>
                 </div>
             </div>
 
             {/* Tabs Selector */}
             <div className="flex bg-surfaceCard/40 p-1.5 rounded-2xl border border-border/30 w-full backdrop-blur-sm">
                 <button
-                    onClick={() => setViewMode('simple')}
-                    className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all flex justify-center items-center gap-2 ${viewMode === 'simple'
-                            ? 'bg-background border border-border/50 text-white shadow-xl'
+                    onClick={() => setViewMode('intuitive')}
+                    className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all flex justify-center items-center gap-2 ${viewMode === 'intuitive'
+                            ? 'bg-background border border-border/50 text-purple-400 shadow-xl'
                             : 'text-textSecondary hover:text-white'
                         }`}
                 >
-                    <CalcIcon size={18} className={viewMode === 'simple' ? 'text-primary' : ''} /> Simples
+                    <Sparkles size={18} className={viewMode === 'intuitive' ? 'text-purple-400' : ''} /> Intuitiva & Lúdica
                 </button>
                 <button
-                    onClick={() => setViewMode('advanced')}
-                    className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all flex justify-center items-center gap-2 ${viewMode === 'advanced'
-                            ? 'bg-background border border-border/50 text-white shadow-xl'
+                    onClick={() => setViewMode('standard')}
+                    className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all flex justify-center items-center gap-2 ${viewMode === 'standard'
+                            ? 'bg-background border border-border/50 text-primary shadow-xl'
                             : 'text-textSecondary hover:text-white'
                         }`}
                 >
-                    <BarChart2 size={18} className={viewMode === 'advanced' ? 'text-primary' : ''} /> Avançado
+                    <LineChart size={18} className={viewMode === 'standard' ? 'text-primary' : ''} /> Juros Compostos Padrão
                 </button>
             </div>
 
             {/* Content */}
-            <div className="space-y-6">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* Form */}
-                    <CalculatorForm
-                        initialValue={initialValue}
-                        monthlyContribution={monthlyContribution}
-                        annualRate={annualRate}
-                        periodMonths={periodMonths}
-                        onInitialValueChange={setInitialValue}
-                        onMonthlyContributionChange={setMonthlyContribution}
-                        onAnnualRateChange={setAnnualRate}
-                        onPeriodMonthsChange={setPeriodMonths}
-                    />
+            {viewMode === 'intuitive' ? (
+                <CalculatorIntuitive />
+            ) : (
+                <div className="space-y-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        {/* Form */}
+                        <CalculatorForm
+                            initialValue={initialValue}
+                            monthlyContribution={monthlyContribution}
+                            annualRate={annualRate}
+                            periodMonths={periodMonths}
+                            onInitialValueChange={setInitialValue}
+                            onMonthlyContributionChange={setMonthlyContribution}
+                            onAnnualRateChange={setAnnualRate}
+                            onPeriodMonthsChange={setPeriodMonths}
+                        />
 
-                    {/* Results */}
-                    <CalculatorResults
+                        {/* Results */}
+                        <CalculatorResults
+                            summary={summary}
+                            initialValue={initialValue}
+                            formatCurrency={formatCurrency}
+                        />
+                    </div>
+
+                    {/* Chart */}
+                    <CalculatorChart
                         summary={summary}
-                        initialValue={initialValue}
+                        viewMode="advanced"
                         formatCurrency={formatCurrency}
                     />
                 </div>
-
-                {/* Chart */}
-                <CalculatorChart
-                    summary={summary}
-                    viewMode={viewMode}
-                    formatCurrency={formatCurrency}
-                />
-            </div>
+            )}
         </div>
     );
 }

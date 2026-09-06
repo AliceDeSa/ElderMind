@@ -2,13 +2,16 @@ import { useState, useEffect, useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
 import { ChevronDown, ChevronUp, AlertCircle, CheckCircle2, X, Coffee, Home, Car, Utensils, ShoppingBag, Globe, MoreHorizontal } from 'lucide-react';
 import { useFinance } from '../../context/FinanceProvider';
+import { getExpenseInstallmentInfo } from '../../utils/installments';
 
 export default function AnalysisTab() {
-    const { incomes, expenses, cards, budgetAllocation, getYearlyStats } = useFinance();
+    const { incomes, expenses, cards, budgetAllocation, getYearlyStats, selectedYear: contextYear } = useFinance();
     const [data, setData] = useState([]);
     const [selectedMonthIndex, setSelectedMonthIndex] = useState(new Date().getMonth());
     const [selectedCardFilter, setSelectedCardFilter] = useState(null);
     const [expandedBudgets, setExpandedBudgets] = useState([]);
+
+    const currentYear = contextYear || new Date().getFullYear();
 
     // Load Yearly Data for the Chart
     useEffect(() => {
@@ -24,23 +27,22 @@ export default function AnalysisTab() {
             .reduce((acc, curr) => acc + Number(curr.amount), 0);
     }, [incomes, selectedMonthIndex]);
 
+    // Filter expenses that apply to the selected month & year (including installments and recurring)
+    const monthlyExpenses = useMemo(() => {
+        const targetMonth = selectedMonthIndex !== null ? selectedMonthIndex : new Date().getMonth();
+        return expenses.filter(e => {
+            const info = getExpenseInstallmentInfo(e, targetMonth, currentYear);
+            return info.applies;
+        });
+    }, [expenses, selectedMonthIndex, currentYear]);
+
     // 2. Total Expenditure for selected month
     const totalMonthExpense = useMemo(() => {
-        return expenses
-            .filter(e => {
-                const date = new Date(e.date);
-                return date.getMonth() === selectedMonthIndex;
-            })
-            .reduce((acc, curr) => acc + Number(curr.amount), 0);
-    }, [expenses, selectedMonthIndex]);
+        return monthlyExpenses.reduce((acc, curr) => acc + Number(curr.amount), 0);
+    }, [monthlyExpenses]);
 
     // 3. Process categories stats (RESTORED)
     const categoryStats = useMemo(() => {
-        const monthlyExpenses = expenses.filter(e => {
-            const date = new Date(e.date);
-            return date.getMonth() === selectedMonthIndex;
-        });
-
         const groups = monthlyExpenses.reduce((acc, exp) => {
             const cat = exp.category || 'Outros';
             if (!acc[cat]) acc[cat] = 0;
@@ -65,15 +67,12 @@ export default function AnalysisTab() {
             color: iconMap[name]?.color || 'bg-slate-500',
             percentage: totalMonthExpense > 0 ? (amount / totalMonthExpense) * 100 : 0
         })).sort((a, b) => b.amount - a.amount);
-    }, [expenses, selectedMonthIndex, totalMonthExpense]);
+    }, [monthlyExpenses, totalMonthExpense]);
 
     // 4. Process budgets and their associated expenses
     const budgetStats = useMemo(() => {
         return budgetAllocation.map(budget => {
-            const linkedExpenses = expenses.filter(e => {
-                const date = new Date(e.date);
-                return e.budgetId === budget.id && date.getMonth() === selectedMonthIndex;
-            });
+            const linkedExpenses = monthlyExpenses.filter(e => e.budgetId === budget.id || e.budget_id === budget.id);
 
             const spent = linkedExpenses.reduce((acc, curr) => acc + Number(curr.amount), 0);
             const limit = totalMonthIncome * (budget.value / 100);
@@ -89,7 +88,7 @@ export default function AnalysisTab() {
                 expenses: linkedExpenses
             };
         });
-    }, [budgetAllocation, expenses, totalMonthIncome, selectedMonthIndex]);
+    }, [budgetAllocation, monthlyExpenses, totalMonthIncome]);
 
     // --- CHART HELPERS ---
     const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
