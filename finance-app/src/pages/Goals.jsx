@@ -71,8 +71,20 @@ export default function Goals() {
         }
     ];
 
+    const [hasSelectedPreset, setHasSelectedPreset] = useState(() => {
+        return !!localStorage.getItem('budget_preset_selected');
+    });
+    const [showPresetSelector, setShowPresetSelector] = useState(!hasSelectedPreset);
+
     const applyPreset = (presetAllocation) => {
         setLocalAllocation(presetAllocation);
+        setHasSelectedPreset(true);
+        try {
+            localStorage.setItem('budget_preset_selected', 'true');
+        } catch (e) {
+            console.error(e);
+        }
+        setShowPresetSelector(false);
     };
 
     const handleReset = () => {
@@ -87,25 +99,43 @@ export default function Goals() {
     return (
         <div className="animate-fade-in max-w-[1400px] mx-auto pb-4 px-2">
             {/* Page Header */}
-            <div className="mb-6 pt-2">
-                <h1 className="text-[26px] font-bold text-white">Gestão de Orçamento</h1>
-                <p className="text-textSecondary text-sm mt-1">Defina como você quer distribuir sua renda mensal</p>
-                
-                {/* Modelos Pré-Criados */}
-                <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
-                    {PRESET_PROFILES.map((profile) => (
-                        <div
-                            key={profile.id}
-                            onClick={() => applyPreset(profile.allocation)}
-                            className="p-3.5 bg-surfaceCard/60 border border-border/40 hover:border-primary/50 rounded-xl cursor-pointer transition-all hover:bg-surfaceCard group"
-                        >
-                            <h4 className="text-xs font-bold text-white group-hover:text-primary transition-colors">{profile.title}</h4>
-                            <p className="text-[11px] text-textSecondary mt-0.5">{profile.desc}</p>
-                            <span className="inline-block text-[10px] text-primary font-bold mt-2">Aplicar Modelo →</span>
-                        </div>
-                    ))}
+            <div className="mb-6 pt-2 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h1 className="text-[26px] font-bold text-white">Gestão de Orçamento</h1>
+                    <p className="text-textSecondary text-sm mt-1">Defina como você quer distribuir sua renda mensal</p>
                 </div>
+                
+                {/* Subtle Toggle Button for Presets */}
+                <button
+                    onClick={() => setShowPresetSelector(!showPresetSelector)}
+                    className="px-3.5 py-1.5 bg-surfaceCard/60 hover:bg-surfaceCard border border-border/40 hover:border-primary/40 rounded-xl text-xs font-bold text-textSecondary hover:text-white transition-all flex items-center gap-2"
+                >
+                    <span>⚡ {showPresetSelector ? 'Ocultar Modelos' : 'Mudar Modelo Pré-Definido'}</span>
+                </button>
             </div>
+
+            {/* Modelos Pré-Criados (Onboarding / Collapsible) */}
+            {showPresetSelector && (
+                <div className="mb-6 bg-surfaceCard/40 border border-primary/20 p-4 rounded-2xl animate-fade-in">
+                    <div className="flex justify-between items-center mb-3">
+                        <span className="text-xs font-bold uppercase tracking-wider text-primary">Escolha um Modelo Inicial de Orçamento:</span>
+                        <button onClick={() => setShowPresetSelector(false)} className="text-xs text-textSecondary hover:text-white font-semibold">Fechar ✕</button>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        {PRESET_PROFILES.map((profile) => (
+                            <div
+                                key={profile.id}
+                                onClick={() => applyPreset(profile.allocation)}
+                                className="p-3.5 bg-surfaceCard/80 border border-border/40 hover:border-primary/60 rounded-xl cursor-pointer transition-all hover:bg-surfaceCard group"
+                            >
+                                <h4 className="text-xs font-bold text-white group-hover:text-primary transition-colors">{profile.title}</h4>
+                                <p className="text-[11px] text-textSecondary mt-0.5">{profile.desc}</p>
+                                <span className="inline-block text-[10px] text-primary font-bold mt-2">Aplicar Modelo →</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
 

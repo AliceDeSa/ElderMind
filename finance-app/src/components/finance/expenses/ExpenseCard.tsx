@@ -121,13 +121,21 @@ export default function ExpenseCard({
                         <div className="flex items-center gap-3">
                             <h3 className="text-lg md:text-xl font-bold text-white truncate">{card.name}</h3>
                             <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${cardStyle.badgeBg} flex-shrink-0`}>
-                                Vence dia {card.dueDate}
+                                Vence dia {card.dueDate || card.due_date || '--'}
                             </span>
-                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity ml-auto md:ml-0">
-                                <button onClick={(e) => { e.stopPropagation(); onEditCard(); }} className="text-textSecondary hover:text-white p-1 rounded transition-colors" title="Editar Cartão">
+                            <div className="flex items-center gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity ml-auto md:ml-0">
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); onEditCard(); }}
+                                    className="p-1.5 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors"
+                                    title="Editar Cartão"
+                                >
                                     <Pencil size={14} />
                                 </button>
-                                <button onClick={(e) => { e.stopPropagation(); onDeleteCard(); }} className="text-textSecondary hover:text-red-400 p-1 rounded transition-colors" title="Excluir Cartão">
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); onDeleteCard(); }}
+                                    className="p-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-colors"
+                                    title="Excluir Cartão"
+                                >
                                     <Trash2 size={14} />
                                 </button>
                             </div>

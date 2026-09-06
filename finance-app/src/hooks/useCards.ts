@@ -57,6 +57,7 @@ export function useCards(userId: string | undefined): UseCardsReturn {
                 return {
                     ...card,
                     limit: Number(card.limit_val),
+                    dueDate: Number(card.due_date) || 1,
                     expenses: cardExpenses
                 };
             });
@@ -75,7 +76,7 @@ export function useCards(userId: string | undefined): UseCardsReturn {
             user_id: userId,
             name: card.name || 'Novo Cartão',
             limit_val: Number(card.limit) || 0,
-            due_date: card.due_date || card.dueDate || 1
+            due_date: Number(card.dueDate || card.due_date) || 1
         };
 
         try {
@@ -91,6 +92,7 @@ export function useCards(userId: string | undefined): UseCardsReturn {
                 const newCard: Card = {
                     ...data[0],
                     limit: Number(data[0].limit_val),
+                    dueDate: Number(data[0].due_date),
                     expenses: []
                 };
                 setCards(prev => [...prev, newCard]);
@@ -107,8 +109,10 @@ export function useCards(userId: string | undefined): UseCardsReturn {
 
         const payload: any = {};
         if (card.name) payload.name = card.name;
-        if (card.limit) payload.limit_val = Number(card.limit);
-        if (card.dueDate) payload.due_date = card.dueDate;
+        if (card.limit !== undefined) payload.limit_val = Number(card.limit);
+        if (card.dueDate !== undefined || card.due_date !== undefined) {
+            payload.due_date = Number(card.dueDate || card.due_date);
+        }
 
         try {
             Logger.finance('Atualizando cartão', { id, payload });
@@ -127,7 +131,7 @@ export function useCards(userId: string | undefined): UseCardsReturn {
                             ...c,
                             name: data[0].name,
                             limit: Number(data[0].limit_val),
-                            dueDate: data[0].due_date
+                            dueDate: Number(data[0].due_date)
                         };
                     }
                     return c;

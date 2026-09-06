@@ -43,6 +43,19 @@ export function useShoppingLists(userId: string | undefined) {
 
             let targetLists = listsData || [];
 
+            // Default items template
+            const defaultItemsTemplate = [
+                { name: 'Arroz', quantity: 1, stock: 0, category: 'Mercearia', order_index: 0, is_purchased: false, unit: 'kg' },
+                { name: 'Açúcar', quantity: 1, stock: 0, category: 'Mercearia', order_index: 1, is_purchased: false, unit: 'kg' },
+                { name: 'Café', quantity: 1, stock: 0, category: 'Mercearia', order_index: 2, is_purchased: false, unit: 'cx' },
+                { name: 'Óleo', quantity: 1, stock: 0, category: 'Mercearia', order_index: 3, is_purchased: false, unit: 'un' },
+                { name: 'Leite', quantity: 1, stock: 0, category: 'Laticínios', order_index: 4, is_purchased: false, unit: 'un' },
+                { name: 'Ovos', quantity: 1, stock: 0, category: 'Laticínios', order_index: 5, is_purchased: false, unit: 'cx' },
+                { name: 'Feijão', quantity: 1, stock: 0, category: 'Mercearia', order_index: 6, is_purchased: false, unit: 'kg' },
+                { name: 'Sal', quantity: 1, stock: 0, category: 'Mercearia', order_index: 7, is_purchased: false, unit: 'kg' },
+                { name: 'Detergente', quantity: 10, stock: 0, category: 'Higiene e Limpeza', order_index: 8, is_purchased: false, unit: 'un' }
+            ];
+
             // If new user (no lists), auto-create default list with basic items
             if (targetLists.length === 0) {
                 logger.finance('Criando lista de compras padrão para novo usuário');
@@ -59,20 +72,35 @@ export function useShoppingLists(userId: string | undefined) {
                     .single();
 
                 if (!createError && newList) {
-                    const defaultItems = [
-                        { name: 'Arroz', quantity: 1, stock: 0, category: 'essenciais', order_index: 0, list_id: newList.id, user_id: userId },
-                        { name: 'Açúcar', quantity: 1, stock: 0, category: 'essenciais', order_index: 1, list_id: newList.id, user_id: userId },
-                        { name: 'Café', quantity: 1, stock: 0, category: 'essenciais', order_index: 2, list_id: newList.id, user_id: userId },
-                        { name: 'Óleo', quantity: 1, stock: 0, category: 'essenciais', order_index: 3, list_id: newList.id, user_id: userId },
-                        { name: 'Leite', quantity: 1, stock: 0, category: 'essenciais', order_index: 4, list_id: newList.id, user_id: userId },
-                        { name: 'Ovos', quantity: 1, stock: 0, category: 'essenciais', order_index: 5, list_id: newList.id, user_id: userId },
-                        { name: 'Feijão', quantity: 1, stock: 0, category: 'essenciais', order_index: 6, list_id: newList.id, user_id: userId },
-                        { name: 'Sal', quantity: 1, stock: 0, category: 'essenciais', order_index: 7, list_id: newList.id, user_id: userId },
-                        { name: 'Detergente', quantity: 10, stock: 0, category: 'essenciais', order_index: 8, list_id: newList.id, user_id: userId }
-                    ];
-
-                    await supabase.from('shopping_items').insert(defaultItems);
+                    const dbItems = defaultItemsTemplate.map(item => ({
+                        ...item,
+                        list_id: newList.id,
+                        user_id: userId
+                    }));
+                    await supabase.from('shopping_items').insert(dbItems);
                     targetLists = [newList];
+                } else {
+                    // Fallback local list if DB insert fails
+                    const fallbackList: ShoppingListWithItems = {
+                        id: 'fallback-list-1',
+                        user_id: userId || 'guest',
+                        name: 'Lista Básica de Compras',
+                        status: 'planning',
+                        created_at: new Date().toISOString(),
+                        updated_at: new Date().toISOString(),
+                        estimated_total: 0,
+                        actual_total: 0,
+                        items: defaultItemsTemplate.map((item, idx) => ({
+                            id: `fallback-item-${idx}`,
+                            list_id: 'fallback-list-1',
+                            user_id: userId || 'guest',
+                            ...item,
+                            created_at: new Date().toISOString()
+                        }))
+                    };
+                    setLists([fallbackList]);
+                    if (!isBackground) setLoading(false);
+                    return;
                 }
             }
 
@@ -86,12 +114,32 @@ export function useShoppingLists(userId: string | undefined) {
                         .order('category', { ascending: true })
                         .order('order_index', { ascending: true });
 
-                    if (itemsError) {
-                        logger.finance('Error fetching items:', itemsError);
-                        return { ...list, items: [] };
+                    if (itemsError || !itemsData || itemsData.length === 0) {
+                        logger.finance('Populating items for list:', list.name);
+                        // If DB list exists but items are 0, insert default items into DB
+                        const dbItems = defaultItemsTemplate.map(item => ({
+                            ...item,
+                            list_id: list.id,
+                            user_id: userId
+                        }));
+                        const { data: insertedItems } = await supabase
+                            .from('shopping_items')
+                            .insert(dbItems)
+                            .select();
+
+                        return {
+                            ...list,
+                            items: insertedItems || defaultItemsTemplate.map((item, idx) => ({
+                                id: `item-${idx}`,
+                                list_id: list.id,
+                                user_id: userId || 'guest',
+                                ...item,
+                                created_at: new Date().toISOString()
+                            }))
+                        };
                     }
 
-                    return { ...list, items: itemsData || [] };
+                    return { ...list, items: itemsData };
                 })
             );
 

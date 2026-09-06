@@ -39,10 +39,9 @@ export default function EmergencyReserve() {
         }
     }, [config]);
 
-    // Recommended months based on work type
+    // Recommended months based on work type (CLT: 6m, PJ: 12m, Autônomo: 12m)
     const getMonthsCount = (type: 'clt' | 'pj' | 'autonomo') => {
         if (type === 'clt') return 6;
-        if (type === 'pj') return 9;
         return 12;
     };
 
@@ -144,8 +143,8 @@ export default function EmergencyReserve() {
                                     }`}
                                 >
                                     <h4 className="font-bold text-sm text-white">PJ / Empresário</h4>
-                                    <p className="text-xs text-purple-400 font-semibold mt-1">Recomendado: 9 meses</p>
-                                    <p className="text-[11px] text-textSecondary mt-2">Estabilidade intermediária sem proteções trabalhistas diretas.</p>
+                                    <p className="text-xs text-purple-400 font-semibold mt-1">Recomendado: 12 meses</p>
+                                    <p className="text-[11px] text-textSecondary mt-2">Sem proteções trabalhistas; exige proteção completa de 1 ano de custo fixo.</p>
                                 </div>
 
                                 <div
@@ -158,7 +157,7 @@ export default function EmergencyReserve() {
                                 >
                                     <h4 className="font-bold text-sm text-white">Autônomo / Freelancer</h4>
                                     <p className="text-xs text-amber-400 font-semibold mt-1">Recomendado: 12 meses</p>
-                                    <p className="text-[11px] text-textSecondary mt-2">Renda oscilante; exige maior colchão contra meses de baixa liquidez.</p>
+                                    <p className="text-[11px] text-textSecondary mt-2">Renda oscilante; exige colchão completo de 1 ano contra meses de baixa liquidez.</p>
                                 </div>
                             </div>
 
@@ -428,24 +427,39 @@ export default function EmergencyReserve() {
                     </div>
                 </div>
 
-                {/* Where to Invest Guide */}
-                <div className="bg-surfaceCard p-6 rounded-2xl border border-border/50 space-y-3">
+                {/* Where to Invest Guide - Distribuição Recomendada */}
+                <div className="bg-surfaceCard p-6 rounded-2xl border border-border/50 space-y-4">
                     <h4 className="text-base font-bold text-white flex items-center gap-2">
-                        <HelpCircle size={20} className="text-purple-400" /> Onde Deixar Guardada a Reserva?
+                        <HelpCircle size={20} className="text-purple-400" /> Estrutura Recomendada de Alocação da Reserva
                     </h4>
-                    <div className="space-y-2 text-xs text-textSecondary">
-                        <div className="p-3 bg-background/50 rounded-xl border border-border/30 flex items-start gap-2">
-                            <CheckCircle2 size={16} className="text-emerald-400 shrink-0 mt-0.5" />
+                    <div className="space-y-3 text-xs text-textSecondary">
+                        <div className="p-3.5 bg-background/60 rounded-xl border border-emerald-500/20 flex items-start gap-3">
+                            <div className="p-2 bg-emerald-500/20 text-emerald-400 rounded-lg shrink-0 text-sm font-black">💵 1 Mes</div>
                             <div>
-                                <strong className="text-white">CDB 100% do CDI com Liquidez Diária</strong>
-                                <p className="text-[11px] text-textSecondary">Rendimento superior à poupança e resgate imediato a qualquer momento.</p>
+                                <strong className="text-white text-xs">Dinheiro Físico em Casa</strong>
+                                <p className="text-[11px] text-textSecondary mt-0.5">
+                                    Guarde o equivalente a <strong>1 mês de custo fixo em cédulas num local seguro</strong>. Garante compras essenciais em apagões, panes de PIX ou emergências de madrugada.
+                                </p>
                             </div>
                         </div>
-                        <div className="p-3 bg-background/50 rounded-xl border border-border/30 flex items-start gap-2">
-                            <CheckCircle2 size={16} className="text-emerald-400 shrink-0 mt-0.5" />
+
+                        <div className="p-3.5 bg-background/60 rounded-xl border border-blue-500/20 flex items-start gap-3">
+                            <div className="p-2 bg-blue-500/20 text-blue-400 rounded-lg shrink-0 text-sm font-black">🏛️ 1/3</div>
                             <div>
-                                <strong className="text-white">Tesouro Selic</strong>
-                                <p className="text-[11px] text-textSecondary">O investimento mais seguro do país, ideal para montantes maiores.</p>
+                                <strong className="text-white text-xs">Banco Grande Tradicional (Ex: Caixa Econômica)</strong>
+                                <p className="text-[11px] text-textSecondary mt-0.5">
+                                    1/3 do valor restante guardado em banco tradicional de grande porte. Permite <strong>saque imediato em caixas físicos ou lotéricas</strong>, mesmo se houver bloqueios judiciais ou travamentos temporários em fintechs digitais.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="p-3.5 bg-background/60 rounded-xl border border-purple-500/20 flex items-start gap-3">
+                            <div className="p-2 bg-purple-500/20 text-purple-400 rounded-lg shrink-0 text-sm font-black">📈 2/3</div>
+                            <div>
+                                <strong className="text-white text-xs">AUPO11 (Rendimento e Alta Liquidez)</strong>
+                                <p className="text-[11px] text-textSecondary mt-0.5">
+                                    2/3 do valor restante alocados em <strong>AUPO11</strong> para garantir rendimentos constantes acima da inflação com rápida conversão quando necessário.
+                                </p>
                             </div>
                         </div>
                     </div>

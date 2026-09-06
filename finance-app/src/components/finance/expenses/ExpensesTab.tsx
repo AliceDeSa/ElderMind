@@ -70,19 +70,43 @@ export default function ExpensesTab() {
 
     const handleOpenEditCard = (card: any) => {
         setCardFormData({
-            name: card.name,
-            limit: card.limit.toString(),
-            dueDate: card.dueDate.toString()
+            name: card.name || '',
+            limit: (card.limit ?? card.limit_val ?? '').toString(),
+            dueDate: (card.dueDate ?? card.due_date ?? '').toString()
         });
         setCardModal({ open: true, editMode: true, cardId: card.id });
     };
 
     const handleSaveCard = async (e: React.FormEvent) => {
         e.preventDefault();
+        const limitNum = parseFloat(cardFormData.limit.replace(',', '.'));
+        const dueNum = parseInt(cardFormData.dueDate, 10);
+
+        if (!cardFormData.name.trim()) {
+            alert('Por favor, informe o nome/descrição do cartão.');
+            return;
+        }
+        if (isNaN(limitNum) || limitNum <= 0) {
+            alert('Por favor, informe um limite válido maior que R$ 0,00.');
+            return;
+        }
+        if (isNaN(dueNum) || dueNum < 1 || dueNum > 31) {
+            alert('Por favor, informe o dia do vencimento entre 1 e 31.');
+            return;
+        }
+
         if (cardModal.editMode && cardModal.cardId) {
-            await updateCard(cardModal.cardId, cardFormData);
+            await updateCard(cardModal.cardId, {
+                name: cardFormData.name.trim(),
+                limit: limitNum,
+                dueDate: dueNum
+            });
         } else {
-            await addCard(cardFormData);
+            await addCard({
+                name: cardFormData.name.trim(),
+                limit: limitNum,
+                dueDate: dueNum
+            });
         }
         setCardModal({ open: false, editMode: false, cardId: null });
     };

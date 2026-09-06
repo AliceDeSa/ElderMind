@@ -120,27 +120,18 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps): React.ReactE
         {/* Header */}
         <div className="p-6 flex items-center justify-between border-b border-border/30">
           <h1 className="text-2xl font-bold text-primary tracking-tight" translate="no">ElderMind</h1>
-          <div className="flex items-center gap-1">
-            <button
-              onClick={() => setShowConfig(!showConfig)}
-              className={`p-2 transition-colors rounded-lg ${showConfig ? 'text-primary bg-primary/10' : 'text-textSecondary hover:text-white hover:bg-surfaceCard'}`}
-              title="Personalizar Menu"
-            >
-              <Settings size={18} />
-            </button>
-            <button
-              onClick={onClose}
-              className="md:hidden p-2 text-textSecondary hover:text-primary transition-colors rounded-lg hover:bg-surfaceCard"
-            >
-              <X size={20} />
-            </button>
-          </div>
+          <button
+            onClick={onClose}
+            className="md:hidden p-2 text-textSecondary hover:text-primary transition-colors rounded-lg hover:bg-surfaceCard"
+          >
+            <X size={20} />
+          </button>
         </div>
 
         {/* Customization Notice */}
         {showConfig && (
           <div className="bg-primary/10 border-b border-primary/20 p-3 px-4 text-xs text-primary font-medium flex items-center justify-between">
-            <span>Clique nos olhos para ocultar/exibir</span>
+            <span>Clique no olho para exibir/ocultar</span>
             <button onClick={() => setShowConfig(false)} className="underline font-bold">Concluído</button>
           </div>
         )}
@@ -212,7 +203,18 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps): React.ReactE
         </nav>
 
         {/* Footer Actions */}
-        <div className="p-4 mt-auto border-t border-border/30 space-y-3">
+        <div className="p-4 mt-auto border-t border-border/30 space-y-2">
+          <button
+            onClick={() => setShowConfig(!showConfig)}
+            className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold transition-all ${
+              showConfig ? 'bg-primary/20 text-primary border border-primary/30' : 'text-textSecondary hover:bg-surfaceCard hover:text-white'
+            }`}
+          >
+            <span className="flex items-center gap-2">
+              <Eye size={16} /> Personalizar Menu
+            </span>
+            <span className="text-[10px] bg-white/10 px-2 py-0.5 rounded-full">{showConfig ? 'Fechar' : 'Editar'}</span>
+          </button>
           <LanguageSelector dropdownDirection="up" />
           <button
             onClick={logout}
