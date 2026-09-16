@@ -31,9 +31,24 @@
         },
         "card": {
             "dueDay": "Due day",
+            "dueDayFull": "Due on day {{day}}",
+            "limit": "Limit",
             "available": "Available",
             "currentBill": "Current Bill",
-            "transactions": "Transactions"
+            "transactions": "Transactions",
+            "addExpense": "Add Expense",
+            "editCard": "Edit Card",
+            "deleteCard": "Delete Card",
+            "quickAddPlaceholder": "New expense...",
+            "pressEnterToSave": "Press Enter to save",
+            "columns": {
+                "description": "Description",
+                "date": "Date",
+                "amount": "Amount",
+                "installments": "Parc.",
+                "category": "Category",
+                "actions": "Actions"
+            }
         },
         "modal": {
             "newExpense": "New Expense",

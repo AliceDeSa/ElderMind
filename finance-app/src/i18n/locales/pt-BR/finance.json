@@ -31,9 +31,24 @@
         },
         "card": {
             "dueDay": "Vence dia",
+            "dueDayFull": "Vence dia {{day}}",
+            "limit": "Limite",
             "available": "Disponível",
             "currentBill": "Fatura Atual",
-            "transactions": "Lançamentos"
+            "transactions": "Lançamentos",
+            "addExpense": "Adicionar Gasto",
+            "editCard": "Editar Cartão",
+            "deleteCard": "Excluir Cartão",
+            "quickAddPlaceholder": "Nova despesa...",
+            "pressEnterToSave": "Enter para salvar",
+            "columns": {
+                "description": "Descrição",
+                "date": "Data",
+                "amount": "Valor",
+                "installments": "Parc.",
+                "category": "Categoria",
+                "actions": "Ações"
+            }
         },
         "modal": {
             "newExpense": "Novo Gasto",

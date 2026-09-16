@@ -63,29 +63,25 @@ const HomePage: React.FC = () => {
   return (
     <div className="p-4 md:p-6 pb-24 md:pb-8 max-w-7xl mx-auto space-y-8 animate-fade-in">
 
-      {/* ── Header ── */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-2xl md:text-3xl font-bold text-textMain leading-tight">
-            {t(greetingKey, { name: firstName })}
-          </h1>
-          <p className="text-sm text-textSecondary capitalize">
-            {now.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
-          </p>
+      {/* ── Header & Reflexão ── */}
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div className="flex flex-col gap-1">
+            <h1 className="text-2xl md:text-3xl font-bold text-textMain leading-tight">
+              {t(greetingKey, { name: firstName })}
+            </h1>
+            <p className="text-xs md:text-sm text-textSecondary capitalize">
+              {now.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+            </p>
+          </div>
         </div>
-      </div>
 
-      {/* ── Frase Motivacional do Dia ── */}
-      <div className="bg-gradient-to-r from-primary/10 via-surfaceCard to-surfaceCard border border-primary/20 p-5 rounded-2xl shadow-lg relative overflow-hidden">
-        <div className="flex items-start gap-4">
-          <div className="p-3 bg-primary/20 rounded-xl text-primary shrink-0">
-            <Sparkles size={22} />
-          </div>
-          <div>
-            <p className="text-xs uppercase tracking-widest text-primary font-bold mb-1">Reflexão do Dia</p>
-            <p className="text-sm md:text-base text-textMain italic font-medium">"{currentQuote.quote}"</p>
-            <p className="text-xs text-textSecondary mt-2 font-semibold">— {currentQuote.author}</p>
-          </div>
+        {/* Reflexão do Dia discreta */}
+        <div className="flex items-center gap-2.5 text-xs md:text-sm bg-surfaceCard/60 border border-border/40 px-3.5 py-2 rounded-xl text-textSecondary max-w-3xl">
+          <Sparkles size={16} className="text-primary shrink-0" />
+          <p className="italic text-textMain/90 truncate md:whitespace-normal">
+            "{currentQuote.quote}" <span className="text-textSecondary/70 not-italic font-semibold ml-1">— {currentQuote.author}</span>
+          </p>
         </div>
       </div>
 

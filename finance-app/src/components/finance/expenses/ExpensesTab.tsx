@@ -183,7 +183,7 @@ export default function ExpensesTab() {
         };
 
         if (editMode && expenseId) {
-            await updateExpense(cardId!, expenseId, expenseData);
+            await updateExpense(expenseId, expenseData);
         } else {
             await addExpense(cardId!, expenseData);
         }
@@ -216,7 +216,7 @@ export default function ExpensesTab() {
     };
 
     const handleInlineEditExpense = async (cardId: string, expenseId: string, updates: Partial<any>) => {
-        await updateExpense(cardId, expenseId, updates);
+        await updateExpense(expenseId, updates);
     };
 
     return (
@@ -228,11 +228,11 @@ export default function ExpensesTab() {
                     <p className="text-textSecondary text-sm">{t('finance:expenses.subtitle')}</p>
                 </div>
 
-                <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
+                <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end flex-wrap sm:flex-nowrap">
                     <MonthSelector onDateChange={setCurrentDate} />
 
-                    <Button onClick={handleOpenAddCard} className="!w-auto px-4 py-2 text-sm">
-                        <Plus size={16} className="mr-2" /> {t('finance:expenses.addCard')}
+                    <Button onClick={handleOpenAddCard} className="!w-auto shrink-0 !py-2 px-4 text-xs md:text-sm font-bold whitespace-nowrap">
+                        <Plus size={16} className="mr-1.5" /> {t('finance:expenses.addCard')}
                     </Button>
                 </div>
             </div>

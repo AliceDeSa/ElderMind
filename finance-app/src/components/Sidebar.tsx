@@ -120,12 +120,25 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps): React.ReactE
         {/* Header */}
         <div className="p-6 flex items-center justify-between border-b border-border/30">
           <h1 className="text-2xl font-bold text-primary tracking-tight" translate="no">ElderMind</h1>
-          <button
-            onClick={onClose}
-            className="md:hidden p-2 text-textSecondary hover:text-primary transition-colors rounded-lg hover:bg-surfaceCard"
-          >
-            <X size={20} />
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => setShowConfig(!showConfig)}
+              className={`p-2 rounded-xl transition-all ${
+                showConfig
+                  ? 'bg-primary/20 text-primary border border-primary/30'
+                  : 'text-textSecondary/70 hover:text-white hover:bg-surfaceCard'
+              }`}
+              title="Personalizar itens do menu"
+            >
+              <Settings size={18} />
+            </button>
+            <button
+              onClick={onClose}
+              className="md:hidden p-2 text-textSecondary hover:text-primary transition-colors rounded-lg hover:bg-surfaceCard"
+            >
+              <X size={20} />
+            </button>
+          </div>
         </div>
 
         {/* Customization Notice */}
@@ -204,17 +217,6 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps): React.ReactE
 
         {/* Footer Actions */}
         <div className="p-4 mt-auto border-t border-border/30 space-y-2">
-          <button
-            onClick={() => setShowConfig(!showConfig)}
-            className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold transition-all ${
-              showConfig ? 'bg-primary/20 text-primary border border-primary/30' : 'text-textSecondary hover:bg-surfaceCard hover:text-white'
-            }`}
-          >
-            <span className="flex items-center gap-2">
-              <Eye size={16} /> Personalizar Menu
-            </span>
-            <span className="text-[10px] bg-white/10 px-2 py-0.5 rounded-full">{showConfig ? 'Fechar' : 'Editar'}</span>
-          </button>
           <LanguageSelector dropdownDirection="up" />
           <button
             onClick={logout}

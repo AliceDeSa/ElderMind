@@ -5,6 +5,7 @@
 import { Droppable } from '@hello-pangea/dnd';
 import { CreditCard, Plus, ChevronDown, ChevronUp, Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import ExpenseItem from './ExpenseItem';
 
 interface Expense {
@@ -58,6 +59,7 @@ export default function ExpenseCard({
     onEditCard,
     onDeleteCard
 }: ExpenseCardProps) {
+    const { t } = useTranslation(['finance', 'common']);
     const [expandedExpenseId, setExpandedExpenseId] = useState<string | null>(null);
     const [quickAdd, setQuickAdd] = useState({
         description: '',
@@ -121,36 +123,36 @@ export default function ExpenseCard({
                         <div className="flex items-center gap-3">
                             <h3 className="text-lg md:text-xl font-bold text-white truncate">{card.name}</h3>
                             <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${cardStyle.badgeBg} flex-shrink-0`}>
-                                Vence dia {card.dueDate || card.due_date || '--'}
+                                {t('finance:expenses.card.dueDayFull', { day: card.dueDate || card.due_date || '--' })}
                             </span>
                             <div className="flex items-center gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity ml-auto md:ml-0">
                                 <button
                                     onClick={(e) => { e.stopPropagation(); onEditCard(); }}
                                     className="p-1.5 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors"
-                                    title="Editar Cartão"
+                                    title={t('finance:expenses.card.editCard')}
                                 >
                                     <Pencil size={14} />
                                 </button>
                                 <button
                                     onClick={(e) => { e.stopPropagation(); onDeleteCard(); }}
                                     className="p-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-colors"
-                                    title="Excluir Cartão"
+                                    title={t('finance:expenses.card.deleteCard')}
                                 >
                                     <Trash2 size={14} />
                                 </button>
                             </div>
                         </div>
                         <div className="flex items-center gap-3 text-xs mt-1.5 flex-wrap">
-                            <span className="text-textSecondary">Limite: <strong className="text-white">R$ {card.limit.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong></span>
+                            <span className="text-textSecondary">{t('finance:expenses.card.limit')}: <strong className="text-white">R$ {card.limit.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong></span>
                             <span className="w-1 h-1 rounded-full bg-textSecondary/40"></span>
-                            <span className="text-emerald-400 font-semibold">Disponível: R$ {available.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                            <span className="text-emerald-400 font-semibold">{t('finance:expenses.card.available')}: R$ {available.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                         </div>
                     </div>
                 </div>
 
                 <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end flex-shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-white/5">
                     <div className="text-left md:text-right">
-                        <p className="text-[11px] uppercase tracking-wider text-textSecondary font-bold">Fatura Atual</p>
+                        <p className="text-[11px] uppercase tracking-wider text-textSecondary font-bold">{t('finance:expenses.card.currentBill')}</p>
                         <p className="text-xl md:text-2xl font-black text-white">R$ {totalUsed.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
                     </div>
                     <div className="p-2 rounded-xl bg-white/5 text-textSecondary group-hover:text-white transition-colors">
@@ -164,14 +166,14 @@ export default function ExpenseCard({
                 <div className="px-6 pb-6 border-t border-border/30 pt-4">
                     <div className="flex justify-between items-center mb-4">
                         <h4 className="text-sm font-bold text-textMain flex items-center gap-2">
-                            Lançamentos
+                            {t('finance:expenses.card.transactions')}
                             <span className="bg-white/10 text-white text-[10px] px-2 py-0.5 rounded-full">{card.expenses.length}</span>
                         </h4>
                         <button
                             onClick={(e) => { e.stopPropagation(); onAddExpense(); }}
                             className="text-primary hover:text-white text-xs font-bold flex items-center bg-primary/10 px-3 py-1.5 rounded-lg transition-colors border border-primary/20 hover:bg-primary/20"
                         >
-                            <Plus size={14} className="mr-1" /> Adicionar Gasto
+                            <Plus size={14} className="mr-1" /> {t('finance:expenses.card.addExpense')}
                         </button>
                     </div>
 
@@ -238,12 +240,12 @@ export default function ExpenseCard({
                                         <thead>
                                             <tr className="border-b border-border/30 text-textSecondary text-xs uppercase tracking-wider">
                                                 <th className="p-2 w-10 text-center"></th>
-                                                <th className="p-2 font-medium">Descrição</th>
-                                                <th className="p-2 font-medium">Data</th>
-                                                <th className="p-2 font-medium">Valor</th>
-                                                <th className="p-2 font-medium">Parc.</th>
-                                                <th className="p-2 font-medium">Categoria</th>
-                                                <th className="p-2 font-medium text-right">Ações</th>
+                                                <th className="p-2 font-medium">{t('finance:expenses.card.columns.description')}</th>
+                                                <th className="p-2 font-medium">{t('finance:expenses.card.columns.date')}</th>
+                                                <th className="p-2 font-medium">{t('finance:expenses.card.columns.amount')}</th>
+                                                <th className="p-2 font-medium">{t('finance:expenses.card.columns.installments')}</th>
+                                                <th className="p-2 font-medium">{t('finance:expenses.card.columns.category')}</th>
+                                                <th className="p-2 font-medium text-right">{t('finance:expenses.card.columns.actions')}</th>
                                             </tr>
                                         </thead>
                                         <tbody className="min-h-[50px]">
@@ -264,7 +266,7 @@ export default function ExpenseCard({
                                             <td className="p-2">
                                                 <input
                                                     type="text"
-                                                    placeholder="Nova despesa..."
+                                                    placeholder={t('finance:expenses.card.quickAddPlaceholder')}
                                                     className="w-full bg-transparent border-none text-sm text-white placeholder:text-textSecondary outline-none focus:ring-1 focus:ring-primary rounded px-1"
                                                     value={quickAdd.description}
                                                     onChange={e => setQuickAdd({...quickAdd, description: e.target.value})}
@@ -284,7 +286,7 @@ export default function ExpenseCard({
                                                 <input
                                                     type="number"
                                                     step="0.01"
-                                                    placeholder="Valor"
+                                                    placeholder={t('finance:expenses.card.columns.amount')}
                                                     className="w-24 bg-transparent border-none text-sm text-white outline-none focus:ring-1 focus:ring-primary rounded px-1"
                                                     value={quickAdd.amount}
                                                     onChange={e => setQuickAdd({...quickAdd, amount: e.target.value})}
@@ -295,7 +297,7 @@ export default function ExpenseCard({
                                                 <input
                                                     type="number"
                                                     min="1"
-                                                    placeholder="Parc"
+                                                    placeholder={t('finance:expenses.card.columns.installments')}
                                                     className="w-16 bg-transparent border-none text-sm text-textSecondary outline-none focus:ring-1 focus:ring-primary rounded px-1"
                                                     value={quickAdd.installments}
                                                     onChange={e => setQuickAdd({...quickAdd, installments: e.target.value})}
@@ -319,7 +321,7 @@ export default function ExpenseCard({
                                                 </select>
                                             </td>
                                             <td className="p-2 text-right text-xs text-textSecondary">
-                                                Enter para salvar
+                                                {t('finance:expenses.card.pressEnterToSave')}
                                             </td>
                                         </tr>
                                     </tbody>
