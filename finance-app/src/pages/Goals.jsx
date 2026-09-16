@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import { CheckCircle2, Loader2, Check } from 'lucide-react';
 import { useFinance } from '../context/FinanceProvider';
 
 export default function Goals() {
@@ -7,6 +8,8 @@ export default function Goals() {
 
     const [localAllocation, setLocalAllocation] = useState(budgetAllocation);
     const [totalPercentage, setTotalPercentage] = useState(100);
+    const [isSaving, setIsSaving] = useState(false);
+    const [showSavedSuccess, setShowSavedSuccess] = useState(false);
 
     useEffect(() => {
         const total = localAllocation.reduce((acc, curr) => acc + Number(curr.value), 0);
@@ -23,10 +26,23 @@ export default function Goals() {
         setLocalAllocation(prev =>
             prev.map(item => item.id === id ? { ...item, value: parsed } : item)
         );
+        setShowSavedSuccess(false);
     };
 
-    const handleSave = () => {
-        updateBudgetAllocation(localAllocation);
+    const handleSave = async () => {
+        if (isSaving || totalPercentage !== 100) return;
+        setIsSaving(true);
+        try {
+            await updateBudgetAllocation(localAllocation);
+            setShowSavedSuccess(true);
+            setTimeout(() => {
+                setShowSavedSuccess(false);
+            }, 3500);
+        } catch (error) {
+            console.error('Erro ao salvar alocação:', error);
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     const PRESET_PROFILES = [
@@ -258,17 +274,44 @@ export default function Goals() {
                     </div>
 
                     {/* Save Button */}
-                    <div className="mt-10">
+                    <div className="mt-10 space-y-3">
+                        {showSavedSuccess && (
+                            <div className="p-3.5 bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 rounded-xl text-xs font-bold flex items-center justify-center gap-2 animate-fade-in shadow-lg">
+                                <CheckCircle2 size={18} />
+                                <span>Suas preferências de alocação de orçamento foram salvas com sucesso!</span>
+                            </div>
+                        )}
+
                         <button
                             onClick={handleSave}
-                            disabled={!isExact}
-                            className={`w-full py-3.5 rounded-[12px] text-center text-[13px] font-bold transition-all ${
-                                isExact
+                            disabled={!isExact || isSaving}
+                            className={`w-full py-3.5 rounded-[12px] text-center text-[13px] font-bold transition-all flex items-center justify-center gap-2 ${
+                                showSavedSuccess
+                                    ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 scale-[1.01]'
+                                    : isSaving
+                                    ? 'bg-amber-600 text-black cursor-wait opacity-90'
+                                    : isExact
                                     ? 'bg-[#d97706] text-black hover:bg-[#b45309]'
                                     : 'bg-[#1a1a1a] text-[#52525b] border border-white/[0.03] opacity-60 cursor-not-allowed'
                             }`}
                         >
-                            {isExact ? 'Salvar Alterações' : isOver ? `Reduza ${totalPercentage - 100}% antes de salvar` : `Distribua mais ${100 - totalPercentage}% antes de salvar`}
+                            {showSavedSuccess ? (
+                                <>
+                                    <CheckCircle2 size={18} />
+                                    <span>✓ Alocação Salva com Sucesso!</span>
+                                </>
+                            ) : isSaving ? (
+                                <>
+                                    <Loader2 size={18} className="animate-spin" />
+                                    <span>Salvando alterações...</span>
+                                </>
+                            ) : isExact ? (
+                                'Salvar Alterações'
+                            ) : isOver ? (
+                                `Reduza ${totalPercentage - 100}% antes de salvar`
+                            ) : (
+                                `Distribua mais ${100 - totalPercentage}% antes de salvar`
+                            )}
                         </button>
                     </div>
                 </div>
